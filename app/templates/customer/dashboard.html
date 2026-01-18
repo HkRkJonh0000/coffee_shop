@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-receipt"></i> Tổng đơn hàng</h5>
+                <h2>{{ total_orders }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-currency-dollar"></i> Tổng chi tiêu</h5>
+                <h2>{{ total_spent|round(0)|int }} đ</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-person"></i> Thông tin</h5>
+                <p class="mb-0">{{ current_user.full_name or current_user.username }}</p>
+                <small>{{ current_user.email }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3">Đơn hàng gần đây</h3>
+{% if recent_orders %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td>{{ order.format_total() }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'primary' if order.status == 'pending' else 'success' if order.status == 'delivered' else 'warning' }}">
+                                    {{ order.get_status_display() }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('orders.detail', id=order.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> Xem
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="{{ url_for('orders.index') }}" class="btn btn-outline-primary">Xem tất cả đơn hàng</a>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Bạn chưa có đơn hàng nào.
+        <a href="{{ url_for('products.index') }}" class="btn btn-primary btn-sm ms-2">Mua sắm ngay</a>
+    </div>
+{% endif %}
+{% endblock %}

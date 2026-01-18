@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-box-seam"></i> Sản phẩm</h5>
+                <h2>{{ total_products }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-receipt"></i> Đơn hàng</h5>
+                <h2>{{ total_orders }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-people"></i> Người dùng</h5>
+                <h2>{{ total_users }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-currency-dollar"></i> Doanh thu</h5>
+                <h2>{{ "%.0f"|format(total_revenue) }} đ</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Orders -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-clock-history"></i> Đơn hàng gần đây</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày đặt</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.user.username }}</td>
+                                    <td>{{ order.format_total() }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'primary' if order.status == 'pending' else 'success' if order.status == 'delivered' else 'warning' if order.status == 'processing' else 'info' if order.status == 'shipping' else 'danger' }}">
+                                            {{ order.get_status_display() }}
+                                        </span>
+                                    </td>
+                                    <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.order_detail', id=order.id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Low Stock Products -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5><i class="bi bi-exclamation-triangle"></i> Sản phẩm sắp hết</h5>
+            </div>
+            <div class="card-body">
+                {% if low_stock_products %}
+                    <ul class="list-group">
+                        {% for product in low_stock_products %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ product.name }}
+                                <span class="badge bg-danger">{{ product.stock }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Không có sản phẩm nào sắp hết hàng.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Đơn hàng theo trạng thái</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="ordersByStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Doanh thu 7 ngày qua</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Orders by Status Chart
+    const ordersByStatusData = {{ orders_by_status | tojson }};
+    const statusLabels = ordersByStatusData.map(item => {
+        const statusMap = {
+            'pending': 'Chờ xử lý',
+            'confirmed': 'Đã xác nhận',
+            'processing': 'Đang xử lý',
+            'shipping': 'Đang giao hàng',
+            'delivered': 'Đã giao hàng',
+            'cancelled': 'Đã hủy'
+        };
+        return statusMap[item[0]] || item[0];
+    });
+    const statusCounts = ordersByStatusData.map(item => item[1]);
+    
+    new Chart(document.getElementById('ordersByStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: statusLabels,
+            datasets: [{
+                data: statusCounts,
+                backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#0dcaf0', '#20c997', '#dc3545']
+            }]
+        }
+    });
+    
+    // Revenue Chart
+    const revenueData = {{ revenue_by_day | tojson }};
+    const revenueDates = revenueData.map(item => new Date(item[0]).toLocaleDateString('vi-VN'));
+    const revenueAmounts = revenueData.map(item => parseFloat(item[1]) || 0);
+    
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: revenueDates,
+            datasets: [{
+                label: 'Doanh thu (đ)',
+                data: revenueAmounts,
+                borderColor: '#198754',
+                backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}
