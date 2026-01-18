@@ -38,6 +38,9 @@ Thumbs.db
 # Logs
 *.log
 
+#text files
+*.txt
+
 # Static files uploads
 app/static/images/uploads/
 
