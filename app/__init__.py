@@ -23,7 +23,7 @@ def create_app(config_name=None):
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Vui lòng đăng nhập để tiếp tục.'
     login_manager.login_message_category = 'info'
-    csrf.init_app(app)
+    # csrf.init_app(app)
     
     # Register blueprints
     from app.routes.auth import auth_bp
@@ -56,7 +56,8 @@ def create_app(config_name=None):
         return User.query.get(int(user_id))
     
     # Create database tables
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
+    #     print("Database tables created")
     
     return app

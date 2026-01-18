@@ -11,8 +11,8 @@ from werkzeug.security import generate_password_hash
 from flask_wtf.csrf import CSRFProtect
 
 app = create_app(os.getenv('FLASK_ENV', 'development'))
-csrf = CSRFProtect(app)
 
+# csrf = CSRFProtect()
 @app.cli.command('init-db')
 def init_db():
     """Initialize database with roles and sample data"""
