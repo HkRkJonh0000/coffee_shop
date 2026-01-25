@@ -44,7 +44,7 @@ def init_db():
                 username='admin',
                 email='admin@coffeeshop.com',
                 full_name='Quản trị viên',
-                role_id=admin_role.id
+                role_id= admin_role.id
             )
             admin.set_password('admin123')
             db.session.add(admin)

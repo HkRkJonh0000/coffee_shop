@@ -26,25 +26,39 @@ def dashboard():
     recent_orders = Order.query.order_by(Order.created_at.desc()).limit(10).all()
     
     # Orders by status
-    orders_by_status = db.session.query(
-        Order.status,
-        func.count(Order.id)
-    ).group_by(Order.status).all()
+    orders_by_status = [
+        {'status': row[0], 'count': row[1]}
+        for row in db.session.query(
+            Order.status,
+            func.count(Order.id)
+        ).group_by(Order.status).all()
+    ]
     
     # Revenue by day (last 7 days)
     seven_days_ago = datetime.utcnow() - timedelta(days=7)
     # Use DATE() function for MySQL compatibility
-    revenue_by_day = db.session.query(
-        func.date(Order.created_at).label('date'),
-        func.sum(Order.total_amount).label('revenue')
-    ).filter(Order.created_at >= seven_days_ago)\
-     .group_by(func.date(Order.created_at))\
-     .order_by(func.date(Order.created_at))\
-     .all()
+    rows = (
+        db.session.query(
+            func.date(Order.created_at).label("data"),
+            func.sum(Order.total_amount).label("revenue")
+        )
+        .filter(Order.created_at >= seven_days_ago)
+        .group_by(func.date(Order.created_at))
+        .order_by(func.date(Order.created_at))
+        .all()
+    )
+
+    revenue_by_day =  [
+        {
+            "date": d.strftime("%Y-%m-%d"),
+            "revenue": float(r or 0)
+        }
+        for d, r in rows
+    ]
     
     # Low stock products
     low_stock_products = Product.query.filter(Product.stock < 10).limit(5).all()
-    
+
     return render_template('admin/dashboard.html',
                          total_products=total_products,
                          total_orders=total_orders,
