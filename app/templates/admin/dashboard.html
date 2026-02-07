@@ -3,54 +3,47 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+<h2 class="section-title"><i class="bi bi-speedometer2"></i> Dashboard</h2>
 
 <!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-md-3">
-        <div class="card text-white bg-primary">
-            <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-box-seam"></i> Sản phẩm</h5>
-                <h2>{{ total_products }}</h2>
-            </div>
+<div class="row g-4 mb-5">
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card stat-products">
+            <h5><i class="bi bi-box-seam"></i> Sản phẩm</h5>
+            <h2>{{ total_products }}</h2>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-success">
-            <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-receipt"></i> Đơn hàng</h5>
-                <h2>{{ total_orders }}</h2>
-            </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card stat-orders">
+            <h5><i class="bi bi-receipt"></i> Đơn hàng</h5>
+            <h2>{{ total_orders }}</h2>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-info">
-            <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-people"></i> Người dùng</h5>
-                <h2>{{ total_users }}</h2>
-            </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card stat-users">
+            <h5><i class="bi bi-people"></i> Người dùng</h5>
+            <h2>{{ total_users }}</h2>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-warning">
-            <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-currency-dollar"></i> Doanh thu</h5>
-                <h2>{{ "%.0f"|format(total_revenue) }} đ</h2>
-            </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="stat-card stat-revenue">
+            <h5><i class="bi bi-currency-dollar"></i> Doanh thu</h5>
+            <h2>{{ "%.0f"|format(total_revenue) }} đ</h2>
         </div>
     </div>
 </div>
 
-<div class="row">
+<div class="row g-4">
     <!-- Recent Orders -->
-    <div class="col-md-8">
+    <div class="col-lg-8">
         <div class="card">
-            <div class="card-header">
-                <h5><i class="bi bi-clock-history"></i> Đơn hàng gần đây</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Đơn hàng gần đây</h5>
+                <a href="{{ url_for('admin.orders') }}" class="btn btn-outline-primary btn-sm">Xem tất cả</a>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover mb-0">
                         <thead>
                             <tr>
                                 <th>Mã đơn</th>
@@ -58,13 +51,13 @@
                                 <th>Tổng tiền</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày đặt</th>
-                                <th>Thao tác</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for order in recent_orders %}
                                 <tr>
-                                    <td>#{{ order.id }}</td>
+                                    <td><strong>#{{ order.id }}</strong></td>
                                     <td>{{ order.user.username }}</td>
                                     <td>{{ order.format_total() }}</td>
                                     <td>
@@ -72,9 +65,9 @@
                                             {{ order.get_status_display() }}
                                         </span>
                                     </td>
-                                    <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td style="color: var(--text-muted); font-size: 0.85rem;">{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
                                     <td>
-                                        <a href="{{ url_for('admin.order_detail', id=order.id) }}" class="btn btn-sm btn-primary">
+                                        <a href="{{ url_for('admin.order_detail', id=order.id) }}" class="btn btn-sm btn-outline-primary">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </td>
@@ -88,23 +81,26 @@
     </div>
     
     <!-- Low Stock Products -->
-    <div class="col-md-4">
+    <div class="col-lg-4">
         <div class="card">
-            <div class="card-header bg-warning text-dark">
-                <h5><i class="bi bi-exclamation-triangle"></i> Sản phẩm sắp hết</h5>
+            <div class="card-header" style="background: linear-gradient(135deg, #fff3cd, #ffeeba); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                <h5 class="mb-0" style="color: #856404;"><i class="bi bi-exclamation-triangle"></i> Sắp hết hàng</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0">
                 {% if low_stock_products %}
-                    <ul class="list-group">
+                    <ul class="list-group list-group-flush">
                         {% for product in low_stock_products %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ product.name }}
+                                <span>{{ product.name }}</span>
                                 <span class="badge bg-danger">{{ product.stock }}</span>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="text-muted">Không có sản phẩm nào sắp hết hàng.</p>
+                    <div class="p-4 text-center">
+                        <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                        <p class="text-muted mt-2 mb-0">Tất cả sản phẩm đều đầy đủ</p>
+                    </div>
                 {% endif %}
             </div>
         </div>
@@ -112,11 +108,11 @@
 </div>
 
 <!-- Charts -->
-<div class="row mt-4">
+<div class="row g-4 mt-2">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card chart-card">
             <div class="card-header">
-                <h5>Đơn hàng theo trạng thái</h5>
+                <h5 class="mb-0">Đơn hàng theo trạng thái</h5>
             </div>
             <div class="card-body">
                 <canvas id="ordersByStatusChart"></canvas>
@@ -124,9 +120,9 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card">
+        <div class="card chart-card">
             <div class="card-header">
-                <h5>Doanh thu 7 ngày qua</h5>
+                <h5 class="mb-0">Doanh thu 7 ngày qua</h5>
             </div>
             <div class="card-body">
                 <canvas id="revenueChart"></canvas>
@@ -137,56 +133,58 @@
 
 {% block extra_js %}
 <script>
-    // Orders by Status Chart
+    const chartColors = {
+        brown: '#6F4E37',
+        gold: '#C8965D',
+        green: '#4A7C59',
+        blue: '#667eea',
+        red: '#C0392B',
+        cream: '#D4A574'
+    };
+
     const ordersByStatusData = {{ orders_by_status | tojson }};
     const statusLabels = ordersByStatusData.map(item => {
         const statusMap = {
-            'pending': 'Chờ xử lý',
-            'confirmed': 'Đã xác nhận',
-            'processing': 'Đang xử lý',
-            'shipping': 'Đang giao hàng',
-            'delivered': 'Đã giao hàng',
-            'cancelled': 'Đã hủy'
+            'pending': 'Chờ xử lý', 'confirmed': 'Đã xác nhận',
+            'processing': 'Đang xử lý', 'shipping': 'Đang giao',
+            'delivered': 'Đã giao', 'cancelled': 'Đã hủy'
         };
         return statusMap[item[0]] || item[0];
     });
-    const statusCounts = ordersByStatusData.map(item => item[1]);
     
     new Chart(document.getElementById('ordersByStatusChart'), {
         type: 'doughnut',
         data: {
             labels: statusLabels,
             datasets: [{
-                data: statusCounts,
-                backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#0dcaf0', '#20c997', '#dc3545']
+                data: ordersByStatusData.map(i => i[1]),
+                backgroundColor: [chartColors.blue, chartColors.green, chartColors.gold, chartColors.cream, chartColors.brown, chartColors.red],
+                borderWidth: 0,
+                hoverOffset: 8
             }]
-        }
+        },
+        options: { plugins: { legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true } } } }
     });
     
-    // Revenue Chart
     const revenueData = {{ revenue_by_day | tojson }};
-    const revenueDates = revenueData.map(item => new Date(item[0]).toLocaleDateString('vi-VN'));
-    const revenueAmounts = revenueData.map(item => parseFloat(item[1]) || 0);
-    
     new Chart(document.getElementById('revenueChart'), {
         type: 'line',
         data: {
-            labels: revenueDates,
+            labels: revenueData.map(i => new Date(i[0]).toLocaleDateString('vi-VN')),
             datasets: [{
                 label: 'Doanh thu (đ)',
-                data: revenueAmounts,
-                borderColor: '#198754',
-                backgroundColor: 'rgba(25, 135, 84, 0.1)',
-                tension: 0.4
+                data: revenueData.map(i => parseFloat(i[1]) || 0),
+                borderColor: chartColors.brown,
+                backgroundColor: 'rgba(111, 78, 55, 0.08)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: chartColors.gold,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5
             }]
         },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
+        options: { scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
     });
 </script>
 {% endblock %}

@@ -1,5 +1,8 @@
 import os
+from dotenv import load_dotenv
 from datetime import timedelta
+
+load_dotenv()
 
 class Config:
     """Base configuration class"""
@@ -25,14 +28,14 @@ class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://rikai:Admin%40123@localhost:3306/coffee_shop?charset=utf8mb4'
+        'mysql+pymysql://rikai:Admin%40123@coffee_shop_db_1:3306/coffee_shop?charset=utf8mb4'
     SQLALCHEMY_ECHO = True  # Log SQL queries
 
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://rikai:Admin%40123@localhost:3306/coffee_shop?charset=utf8mb4'
+        'mysql+pymysql://rikai:Admin%40123@coffee_shop_db_1:3306/coffee_shop?charset=utf8mb4'
     SESSION_COOKIE_SECURE = True  # Requires HTTPS
     SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(32)
 

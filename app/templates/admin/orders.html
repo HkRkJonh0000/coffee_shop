@@ -3,32 +3,29 @@
 {% block title %}Quản lý đơn hàng{% endblock %}
 
 {% block content %}
-<h2 class="mb-4"><i class="bi bi-receipt"></i> Quản lý đơn hàng</h2>
+<h2 class="section-title"><i class="bi bi-receipt"></i> Quản lý đơn hàng</h2>
 
 <!-- Filters -->
-<div class="card mb-4">
+<div class="card filter-card mb-4">
     <div class="card-body">
-        <form method="GET" action="{{ url_for('admin.orders') }}" class="row g-3">
+        <form method="GET" action="{{ url_for('admin.orders') }}" class="row g-3 align-items-end">
             <div class="col-md-4">
+                <label class="form-label">Trạng thái</label>
                 <select class="form-select" name="status">
-                    <option value="">Tất cả trạng thái</option>
+                    <option value="">Tất cả</option>
                     <option value="pending" {% if status == 'pending' %}selected{% endif %}>Chờ xử lý</option>
                     <option value="confirmed" {% if status == 'confirmed' %}selected{% endif %}>Đã xác nhận</option>
                     <option value="processing" {% if status == 'processing' %}selected{% endif %}>Đang xử lý</option>
-                    <option value="shipping" {% if status == 'shipping' %}selected{% endif %}>Đang giao hàng</option>
-                    <option value="delivered" {% if status == 'delivered' %}selected{% endif %}>Đã giao hàng</option>
+                    <option value="shipping" {% if status == 'shipping' %}selected{% endif %}>Đang giao</option>
+                    <option value="delivered" {% if status == 'delivered' %}selected{% endif %}>Đã giao</option>
                     <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>Đã hủy</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="bi bi-search"></i> Lọc
-                </button>
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i> Lọc</button>
             </div>
             <div class="col-md-2">
-                <a href="{{ url_for('admin.orders') }}" class="btn btn-secondary w-100">
-                    <i class="bi bi-arrow-clockwise"></i> Reset
-                </a>
+                <a href="{{ url_for('admin.orders') }}" class="btn btn-outline-secondary w-100"><i class="bi bi-arrow-clockwise"></i> Reset</a>
             </div>
         </form>
     </div>
@@ -36,9 +33,9 @@
 
 <!-- Orders Table -->
 <div class="card">
-    <div class="card-body">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover mb-0">
                 <thead>
                     <tr>
                         <th>Mã đơn</th>
@@ -46,13 +43,13 @@
                         <th>Tổng tiền</th>
                         <th>Trạng thái</th>
                         <th>Ngày đặt</th>
-                        <th>Thao tác</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for order in orders %}
                         <tr>
-                            <td>#{{ order.id }}</td>
+                            <td><strong>#{{ order.id }}</strong></td>
                             <td>{{ order.user.username }}</td>
                             <td><strong>{{ order.format_total() }}</strong></td>
                             <td>
@@ -60,9 +57,9 @@
                                     {{ order.get_status_display() }}
                                 </span>
                             </td>
-                            <td>{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td style="color: var(--text-muted); font-size: 0.85rem;">{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
                             <td>
-                                <a href="{{ url_for('admin.order_detail', id=order.id) }}" class="btn btn-sm btn-primary">
+                                <a href="{{ url_for('admin.order_detail', id=order.id) }}" class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-eye"></i> Xem
                                 </a>
                             </td>
@@ -71,33 +68,26 @@
                 </tbody>
             </table>
         </div>
-        
-        <!-- Pagination -->
-        {% if pagination.pages > 1 %}
-            <nav aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    {% if pagination.has_prev %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('admin.orders', page=pagination.prev_num, status=status) }}">Trước</a>
-                        </li>
-                    {% endif %}
-                    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-                        {% if page_num %}
-                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                <a class="page-link" href="{{ url_for('admin.orders', page=page_num, status=status) }}">{{ page_num }}</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                        {% endif %}
-                    {% endfor %}
-                    {% if pagination.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('admin.orders', page=pagination.next_num, status=status) }}">Sau</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        {% endif %}
     </div>
 </div>
+
+{% if pagination.pages > 1 %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('admin.orders', page=pagination.prev_num, status=status) }}"><i class="bi bi-chevron-left"></i></a></li>
+            {% endif %}
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if page_num %}
+                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}"><a class="page-link" href="{{ url_for('admin.orders', page=page_num, status=status) }}">{{ page_num }}</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+            {% if pagination.has_next %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('admin.orders', page=pagination.next_num, status=status) }}"><i class="bi bi-chevron-right"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
 {% endblock %}

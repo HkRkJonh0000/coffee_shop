@@ -6,7 +6,7 @@ from app.models.order import Order, OrderItem, OrderStatus
 from app.models.user import User, Role
 from app.utils.decorators import admin_required, manager_required, staff_required
 from app.utils.helpers import paginate_query, format_currency
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, or_
 from datetime import datetime, timedelta
 
 admin_bp = Blueprint('admin', __name__)
@@ -240,7 +240,7 @@ def users():
     
     if search:
         query = query.filter(
-            db.or_(
+            or_(
                 User.username.contains(search),
                 User.email.contains(search),
                 User.full_name.contains(search)

@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask.cli import with_appcontext
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 from app.database.db import db
@@ -9,13 +10,172 @@ import os
 login_manager = LoginManager()
 csrf = CSRFProtect()
 
+def register_cli(app):
+    @app.cli.command('init-db')
+    @with_appcontext
+    def init_db_command():
+        """Initialize database with roles and sample data"""
+        from app.models.user import User, Role
+        from app.models.product import Product, Category
+
+        db.create_all()
+
+        # Create roles
+        roles_data = [
+            {'name': 'admin', 'description': 'Quản trị viên hệ thống'},
+            {'name': 'manager', 'description': 'Quản lý cửa hàng'},
+            {'name': 'staff', 'description': 'Nhân viên'},
+            {'name': 'customer', 'description': 'Khách hàng'}
+        ]
+
+        for role_data in roles_data:
+            role = Role.query.filter_by(name=role_data['name']).first()
+            if not role:
+                role = Role(**role_data)
+                db.session.add(role)
+
+        db.session.commit()
+        print("✓ Roles created")
+
+        # Create admin user
+        admin_role = Role.query.filter_by(name='admin').first()
+        if admin_role:
+            admin = User.query.filter_by(username='admin').first()
+            if not admin:
+                admin = User(
+                    username='admin',
+                    email='admin@coffeeshop.com',
+                    full_name='Quản trị viên',
+                    role_id=admin_role.id
+                )
+                admin.set_password('admin123')
+                db.session.add(admin)
+                db.session.commit()
+                print("✓ Admin user created (username: admin, password: admin123)")
+
+        # Create sample categories
+        categories_data = [
+            {'name': 'Cà phê đen', 'description': 'Các loại cà phê đen truyền thống'},
+            {'name': 'Cà phê sữa', 'description': 'Cà phê pha với sữa'},
+            {'name': 'Espresso', 'description': 'Cà phê espresso và các biến thể'},
+            {'name': 'Cà phê pha máy', 'description': 'Cà phê pha bằng máy pha chế'},
+            {'name': 'Đồ uống khác', 'description': 'Các loại đồ uống khác'}
+        ]
+
+        for cat_data in categories_data:
+            category = Category.query.filter_by(name=cat_data['name']).first()
+            if not category:
+                category = Category(**cat_data)
+                db.session.add(category)
+
+        db.session.commit()
+        print("✓ Categories created")
+
+        # Create sample products
+        category_map = {c.name: c.id for c in Category.query.all()}
+        products_data = [
+            {
+                'name': 'Cà phê đen đá',
+                'description': 'Cà phê đen pha đậm đà, thơm ngon',
+                'price': 25000,
+                'stock': 100,
+                'category_name': 'Cà phê đen'
+            },
+            {
+                'name': 'Cà phê đen nóng',
+                'description': 'Cà phê đen nóng, thơm lừng',
+                'price': 25000,
+                'stock': 100,
+                'category_name': 'Cà phê đen'
+            },
+            {
+                'name': 'Cà phê sữa đá',
+                'description': 'Cà phê sữa đá truyền thống',
+                'price': 30000,
+                'stock': 100,
+                'category_name': 'Cà phê sữa'
+            },
+            {
+                'name': 'Cà phê sữa nóng',
+                'description': 'Cà phê sữa nóng thơm ngon',
+                'price': 30000,
+                'stock': 100,
+                'category_name': 'Cà phê sữa'
+            },
+            {
+                'name': 'Espresso',
+                'description': 'Espresso đậm đà, nguyên chất',
+                'price': 35000,
+                'stock': 50,
+                'category_name': 'Espresso'
+            },
+            {
+                'name': 'Cappuccino',
+                'description': 'Cappuccino với lớp bọt sữa mịn',
+                'price': 45000,
+                'stock': 50,
+                'category_name': 'Espresso'
+            },
+            {
+                'name': 'Latte',
+                'description': 'Latte với sữa tươi thơm ngon',
+                'price': 50000,
+                'stock': 50,
+                'category_name': 'Espresso'
+            },
+            {
+                'name': 'Americano',
+                'description': 'Americano pha loãng từ espresso',
+                'price': 40000,
+                'stock': 50,
+                'category_name': 'Cà phê pha máy'
+            },
+            {
+                'name': 'Mocha',
+                'description': 'Mocha với chocolate và cà phê',
+                'price': 55000,
+                'stock': 50,
+                'category_name': 'Cà phê pha máy'
+            },
+            {
+                'name': 'Macchiato',
+                'description': 'Macchiato với lớp sữa đánh',
+                'price': 48000,
+                'stock': 50,
+                'category_name': 'Espresso'
+            },
+        ]
+
+        for prod_data in products_data:
+            product = Product.query.filter_by(name=prod_data['name']).first()
+            if not product:
+                category_id = category_map.get(prod_data['category_name'])
+                if not category_id:
+                    print(f"! Skip product '{prod_data['name']}' (missing category)")
+                    continue
+                product = Product(
+                    name=prod_data['name'],
+                    description=prod_data['description'],
+                    price=prod_data['price'],
+                    stock=prod_data['stock'],
+                    category_id=category_id
+                )
+                db.session.add(product)
+
+        db.session.commit()
+        print("✓ Sample products created")
+        print("\n✓ Database initialization completed!")
+        print("\nDefault login credentials:")
+        print("  Username: admin")
+        print("  Password: admin123")
+
 def create_app(config_name=None):
     """Application factory pattern"""
     app = Flask(__name__)
     
     # Load configuration
-    config_name = config_name or os.environ.get('FLASK_ENV', 'development')
-    app.config.from_object(config[config_name])
+    config_name = config_name or os.environ.get('FLASK_ENV', 'default')
+    app.config.from_object(config.get(config_name, config['default']))
     
     # Initialize extensions
     db.init_app(app)
@@ -54,10 +214,7 @@ def create_app(config_name=None):
         """Load user for Flask-Login"""
         from app.models.user import User
         return User.query.get(int(user_id))
-    
-    # Create database tables
-    # with app.app_context():
-    #     db.create_all()
-    #     print("Database tables created")
-    
+
+    register_cli(app)
+
     return app
