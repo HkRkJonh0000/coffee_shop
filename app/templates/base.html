@@ -9,6 +9,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
@@ -16,87 +20,155 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <nav class="navbar navbar-expand-lg sticky-top cs-navbar" id="mainNavbar">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('dashboard.index') }}">
-                <i class="bi bi-cup-hot-fill"></i> Coffee Shop
+            <!-- Brand -->
+            <a class="navbar-brand cs-brand" href="{{ url_for('dashboard.index') }}">
+                <span class="cs-brand-icon">
+                    <i class="bi bi-cup-hot-fill"></i>
+                </span>
+                <span class="cs-brand-text">
+                    <span class="cs-brand-name">Coffee Shop</span>
+                    <span class="cs-brand-tagline">Premium Quality</span>
+                </span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+
+            <!-- Mobile Toggle -->
+            <div class="d-flex align-items-center d-lg-none gap-2">
+                {% if current_user.is_authenticated and not current_user.can_manage_orders() %}
+                <a class="cs-cart-mobile" href="{{ url_for('products.cart') }}">
+                    <i class="bi bi-cart3"></i>
+                    {% if session.get('cart') %}
+                        <span class="cs-cart-badge">{{ session.cart|length }}</span>
+                    {% endif %}
+                </a>
+                {% endif %}
+                <button class="navbar-toggler cs-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="cs-toggler-line"></span>
+                    <span class="cs-toggler-line"></span>
+                    <span class="cs-toggler-line"></span>
+                </button>
+            </div>
+
+            <!-- Navbar Content -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <!-- Main Navigation -->
+                <ul class="navbar-nav me-auto cs-nav-main">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('products.index') }}">
-                            <i class="bi bi-shop"></i> S&#7843;n ph&#7849;m
+                        <a class="nav-link cs-nav-link {% if request.endpoint and 'products' in request.endpoint %}active{% endif %}" href="{{ url_for('products.index') }}">
+                            <i class="bi bi-shop"></i>
+                            <span>Sản phẩm</span>
                         </a>
                     </li>
                     {% if current_user.is_authenticated %}
                         {% if current_user.can_manage_orders() %}
+                            <!-- Admin Navigation -->
+                            <li class="nav-item cs-nav-divider d-none d-lg-flex"></li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
-                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                <a class="nav-link cs-nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Dashboard</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.products') }}">
-                                    <i class="bi bi-box-seam"></i> Qu&#7843;n l&#253; SP
+                                <a class="nav-link cs-nav-link {% if request.endpoint == 'admin.products' or request.endpoint == 'admin.product_form' %}active{% endif %}" href="{{ url_for('admin.products') }}">
+                                    <i class="bi bi-box-seam"></i>
+                                    <span>Quản lý SP</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin.orders') }}">
-                                    <i class="bi bi-receipt"></i> &#272;&#417;n h&#224;ng
+                                <a class="nav-link cs-nav-link {% if request.endpoint and 'admin.order' in request.endpoint %}active{% endif %}" href="{{ url_for('admin.orders') }}">
+                                    <i class="bi bi-receipt"></i>
+                                    <span>Đơn hàng</span>
                                 </a>
                             </li>
                             {% if current_user.can_manage_users() %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ url_for('admin.users') }}">
-                                        <i class="bi bi-people"></i> Ng&#432;&#7901;i d&#249;ng
-                                    </a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link cs-nav-link {% if request.endpoint == 'admin.users' %}active{% endif %}" href="{{ url_for('admin.users') }}">
+                                    <i class="bi bi-people"></i>
+                                    <span>Người dùng</span>
+                                </a>
+                            </li>
                             {% endif %}
                         {% else %}
+                            <!-- Customer Navigation -->
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('products.cart') }}">
-                                    <i class="bi bi-cart3"></i> Gi&#7887; h&#224;ng
+                                <a class="nav-link cs-nav-link cs-nav-cart d-none d-lg-flex {% if request.endpoint == 'products.cart' %}active{% endif %}" href="{{ url_for('products.cart') }}">
+                                    <i class="bi bi-cart3"></i>
+                                    <span>Giỏ hàng</span>
                                     {% if session.get('cart') %}
-                                        <span class="badge bg-danger">{{ session.cart|length }}</span>
+                                        <span class="cs-cart-badge">{{ session.cart|length }}</span>
                                     {% endif %}
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('orders.index') }}">
-                                    <i class="bi bi-list-check"></i> &#272;&#417;n c&#7911;a t&#244;i
+                                <a class="nav-link cs-nav-link {% if request.endpoint and 'orders' in request.endpoint %}active{% endif %}" href="{{ url_for('orders.index') }}">
+                                    <i class="bi bi-list-check"></i>
+                                    <span>Đơn của tôi</span>
                                 </a>
                             </li>
                         {% endif %}
                     {% endif %}
                 </ul>
-                <ul class="navbar-nav">
+
+                <!-- Right Side Navigation -->
+                <ul class="navbar-nav cs-nav-right">
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-person-circle"></i> {{ current_user.username }}
+                        <li class="nav-item dropdown cs-user-dropdown">
+                            <a class="nav-link dropdown-toggle cs-user-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="cs-avatar">
+                                    <i class="bi bi-person-fill"></i>
+                                </span>
+                                <span class="cs-user-info">
+                                    <span class="cs-user-name">{{ current_user.username }}</span>
+                                    <span class="cs-user-role">
+                                        {% if current_user.can_manage_users() %}Admin
+                                        {% elif current_user.can_manage_orders() %}Quản lý
+                                        {% else %}Khách hàng{% endif %}
+                                    </span>
+                                </span>
+                                <i class="bi bi-chevron-down cs-chevron"></i>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{{ url_for('dashboard.dashboard') }}">
-                                    <i class="bi bi-person"></i> Th&#244;ng tin c&#225; nh&#226;n
-                                </a></li>
+                            <ul class="dropdown-menu dropdown-menu-end cs-dropdown-menu">
+                                <li class="cs-dropdown-header">
+                                    <span class="cs-avatar cs-avatar-lg">
+                                        <i class="bi bi-person-fill"></i>
+                                    </span>
+                                    <div>
+                                        <strong>{{ current_user.username }}</strong>
+                                        <small>{{ current_user.email }}</small>
+                                    </div>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">
-                                    <i class="bi bi-box-arrow-right"></i> &#272;&#259;ng xu&#7845;t
-                                </a></li>
+                                <li>
+                                    <a class="dropdown-item cs-dropdown-item" href="{{ url_for('dashboard.dashboard') }}">
+                                        <i class="bi bi-person-gear"></i> Thông tin cá nhân
+                                    </a>
+                                </li>
+                                {% if not current_user.can_manage_orders() %}
+                                <li>
+                                    <a class="dropdown-item cs-dropdown-item" href="{{ url_for('orders.index') }}">
+                                        <i class="bi bi-bag-check"></i> Đơn hàng của tôi
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item cs-dropdown-item cs-dropdown-logout" href="{{ url_for('auth.logout') }}">
+                                        <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">
-                                <i class="bi bi-box-arrow-in-right"></i> &#272;&#259;ng nh&#7853;p
+                        <li class="nav-item cs-auth-buttons">
+                            <a class="cs-btn-login" href="{{ url_for('auth.login') }}">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                <span>Đăng nhập</span>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.register') }}">
-                                <i class="bi bi-person-plus"></i> &#272;&#259;ng k&#253;
+                            <a class="cs-btn-register" href="{{ url_for('auth.register') }}">
+                                <i class="bi bi-person-plus-fill"></i>
+                                <span>Đăng ký</span>
                             </a>
                         </li>
                     {% endif %}

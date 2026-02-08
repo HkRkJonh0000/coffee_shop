@@ -84,19 +84,32 @@
                 <h5 class="mb-0"><i class="bi bi-arrow-repeat"></i> Cập nhật trạng thái</h5>
             </div>
             <div class="card-body">
+                {% set valid_statuses = order.get_valid_transitions() %}
+                {% set status_labels = {
+                    'pending': 'Chờ xử lý',
+                    'confirmed': 'Đã xác nhận',
+                    'processing': 'Đang xử lý',
+                    'shipping': 'Đang giao',
+                    'delivered': 'Đã giao',
+                    'cancelled': 'Đã hủy'
+                } %}
+                {% if valid_statuses %}
                 <form method="POST" action="{{ url_for('admin.update_order_status', id=order.id) }}">
                     <select class="form-select mb-3" name="status" required>
-                        <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Chờ xử lý</option>
-                        <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>Đã xác nhận</option>
-                        <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Đang xử lý</option>
-                        <option value="shipping" {% if order.status == 'shipping' %}selected{% endif %}>Đang giao</option>
-                        <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Đã giao</option>
-                        <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Đã hủy</option>
+                        {% for status in valid_statuses %}
+                            <option value="{{ status }}">{{ status_labels[status] }}</option>
+                        {% endfor %}
                     </select>
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="bi bi-check-circle"></i> Cập nhật
                     </button>
                 </form>
+                {% else %}
+                <p class="text-muted mb-0">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    Đơn hàng đã ở trạng thái cuối, không thể cập nhật thêm.
+                </p>
+                {% endif %}
             </div>
         </div>
     </div>

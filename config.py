@@ -12,7 +12,7 @@ class Config:
     
     # Flask-Login settings
     REMEMBER_COOKIE_DURATION = timedelta(days=7)
-    SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+    SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     
@@ -24,19 +24,27 @@ class Config:
     UPLOAD_FOLDER = 'app/static/images'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+    # SQLAlchemy connection pool settings
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_recycle': 280,
+        'pool_pre_ping': True,
+        'pool_size': 10,
+        'max_overflow': 20,
+    }
+
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://rikai:Admin%40123@coffee_shop_db_1:3306/coffee_shop?charset=utf8mb4'
-    SQLALCHEMY_ECHO = True  # Log SQL queries
+        'mysql+pymysql://rikai:Admin%40123@db:3306/coffee_shop?charset=utf8mb4'
+    SQLALCHEMY_ECHO = True
 
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://rikai:Admin%40123@coffee_shop_db_1:3306/coffee_shop?charset=utf8mb4'
-    SESSION_COOKIE_SECURE = True  # Requires HTTPS
+        'mysql+pymysql://rikai:Admin%40123@db:3306/coffee_shop?charset=utf8mb4'
+    SESSION_COOKIE_SECURE = False  # Set to True when using HTTPS
     SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(32)
 
 class TestingConfig(Config):

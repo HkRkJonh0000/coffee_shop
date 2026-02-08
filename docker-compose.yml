@@ -53,6 +53,24 @@ services:
     networks:
       - coffee_network
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: coffee_shop_phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: rikai
+      PMA_PASSWORD: Admin@123
+      UPLOAD_LIMIT: 50M
+    ports:
+      - "8080:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - coffee_network
+
   tunnel:
     image: cloudflare/cloudflared:latest
     container_name: coffee_shop_tunnel

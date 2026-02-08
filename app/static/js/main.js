@@ -1,6 +1,48 @@
 // Main JavaScript file for Coffee Shop
 
 document.addEventListener('DOMContentLoaded', function() {
+    // --- Navbar scroll effect ---
+    const navbar = document.getElementById('mainNavbar');
+    if (navbar) {
+        const handleScroll = function() {
+            if (window.scrollY > 30) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // Check initial state
+    }
+
+    // --- Navbar toggler animation ---
+    const toggler = document.querySelector('.cs-toggler');
+    if (toggler) {
+        const navCollapse = document.getElementById('navbarNav');
+        if (navCollapse) {
+            navCollapse.addEventListener('show.bs.collapse', function() {
+                toggler.setAttribute('aria-expanded', 'true');
+            });
+            navCollapse.addEventListener('hide.bs.collapse', function() {
+                toggler.setAttribute('aria-expanded', 'false');
+            });
+        }
+    }
+
+    // --- Close mobile menu on link click ---
+    const navLinks = document.querySelectorAll('.cs-nav-link, .cs-dropdown-item, .cs-btn-login, .cs-btn-register');
+    const navCollapse = document.getElementById('navbarNav');
+    if (navCollapse) {
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) {
+                    const collapse = bootstrap.Collapse.getInstance(navCollapse);
+                    if (collapse) collapse.hide();
+                }
+            });
+        });
+    }
+
     // Auto-hide flash messages after 5 seconds
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(function(alert) {

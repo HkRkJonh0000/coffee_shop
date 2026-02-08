@@ -3,9 +3,6 @@
    Color Palette: Warm coffee tones
    ============================================ */
 
-/* --- Google Fonts Import --- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
-
 /* --- CSS Variables --- */
 :root {
     --coffee-dark: #2C1810;
@@ -78,79 +75,575 @@ a:hover {
     color: var(--coffee-dark);
 }
 
-/* --- Navbar --- */
-.navbar {
-    background: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee-medium) 100%) !important;
-    padding: 0.8rem 0;
-    box-shadow: var(--shadow-lg);
-    border-bottom: 3px solid var(--accent-gold);
+/* --- Navbar (Premium Design) --- */
+.cs-navbar {
+    background: linear-gradient(135deg, var(--coffee-dark) 0%, #1a0e08 50%, var(--coffee-medium) 100%);
+    padding: 0;
+    box-shadow: 0 4px 30px rgba(44, 24, 16, 0.25);
+    border-bottom: none;
+    backdrop-filter: blur(10px);
+    z-index: 1050;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.navbar-brand {
-    font-family: 'Playfair Display', serif !important;
-    font-weight: 700 !important;
-    font-size: 1.6rem !important;
-    color: var(--coffee-milk) !important;
-    letter-spacing: 0.5px;
+.cs-navbar.scrolled {
+    padding: 0;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    background: rgba(26, 14, 8, 0.97);
+    backdrop-filter: blur(20px);
 }
 
-.navbar-brand i {
+/* --- Brand --- */
+.cs-brand {
+    display: flex !important;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 0 !important;
+    text-decoration: none !important;
+}
+
+.cs-brand-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, #e0a95c 100%);
+    color: var(--coffee-dark);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(200, 150, 93, 0.35);
+    transition: var(--transition);
+}
+
+.cs-brand:hover .cs-brand-icon {
+    transform: rotate(-10deg) scale(1.05);
+    box-shadow: 0 6px 20px rgba(200, 150, 93, 0.5);
+}
+
+.cs-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.cs-brand-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+
+.cs-brand-tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+/* --- Nav Links --- */
+.cs-nav-main {
+    gap: 2px;
+    padding: 0.4rem 0;
+}
+
+.cs-nav-link {
+    display: flex !important;
+    align-items: center;
+    gap: 0.45rem;
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-weight: 500;
+    font-size: 0.88rem;
+    padding: 0.55rem 0.95rem !important;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    position: relative;
+    white-space: nowrap;
+}
+
+.cs-nav-link i {
+    font-size: 1rem;
+    opacity: 0.85;
+    transition: var(--transition);
+}
+
+.cs-nav-link:hover {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.cs-nav-link:hover i {
+    opacity: 1;
     color: var(--accent-gold);
 }
 
-.navbar-brand:hover {
+.cs-nav-link.active {
     color: #fff !important;
+    background: rgba(200, 150, 93, 0.15);
 }
 
-.navbar .nav-link {
-    color: rgba(255, 255, 255, 0.8) !important;
-    font-weight: 500;
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem !important;
-    border-radius: var(--radius-sm);
-    transition: var(--transition);
-    position: relative;
+.cs-nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-gold), #e0a95c);
+    border-radius: 3px;
 }
 
-.navbar .nav-link:hover,
-.navbar .nav-link.active {
-    color: #fff !important;
-    background: rgba(255, 255, 255, 0.1);
+.cs-nav-link.active i {
+    color: var(--accent-gold);
+    opacity: 1;
 }
 
-.navbar .nav-link .badge {
-    background: var(--accent-red) !important;
+/* --- Nav Divider --- */
+.cs-nav-divider {
+    display: flex;
+    align-items: center;
+    padding: 0 0.3rem;
+}
+
+.cs-nav-divider::before {
+    content: '';
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 1px;
+}
+
+/* --- Cart Badge --- */
+.cs-cart-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
     font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+    border-radius: 50px;
+    line-height: 1;
+    animation: cartPulse 2s ease-in-out infinite;
+    box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+}
+
+@keyframes cartPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+.cs-nav-cart {
     position: relative;
-    top: -2px;
 }
 
-.navbar .dropdown-menu {
-    border: none;
-    box-shadow: var(--shadow-lg);
-    border-radius: var(--radius-md);
-    padding: 0.5rem;
-    margin-top: 0.5rem;
+.cs-nav-cart .cs-cart-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
 }
 
-.navbar .dropdown-item {
-    border-radius: var(--radius-sm);
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+/* --- Mobile Cart Icon --- */
+.cs-cart-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1.1rem;
+    position: relative;
     transition: var(--transition);
 }
 
-.navbar .dropdown-item:hover {
-    background: var(--coffee-milk);
+.cs-cart-mobile:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.cs-cart-mobile .cs-cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 0.6rem;
+    min-width: 16px;
+    height: 16px;
+}
+
+/* --- Custom Toggler --- */
+.cs-toggler {
+    border: none !important;
+    padding: 0.4rem;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    transition: var(--transition);
+}
+
+.cs-toggler:hover,
+.cs-toggler:focus {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: none !important;
+}
+
+.cs-toggler-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.cs-toggler[aria-expanded="true"] .cs-toggler-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.cs-toggler[aria-expanded="true"] .cs-toggler-line:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.cs-toggler[aria-expanded="true"] .cs-toggler-line:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* --- User Dropdown --- */
+.cs-user-toggle {
+    display: flex !important;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.6rem 0.4rem 0.4rem !important;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: var(--transition);
+    color: #fff !important;
+}
+
+.cs-user-toggle::after {
+    display: none;
+}
+
+.cs-user-toggle:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.cs-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--coffee-cream) 100%);
+    color: var(--coffee-dark);
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    font-weight: 600;
+}
+
+.cs-avatar-lg {
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+}
+
+.cs-user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.cs-user-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+.cs-user-role {
+    font-size: 0.68rem;
+    color: var(--accent-gold);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cs-chevron {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    transition: var(--transition);
+    margin-left: -0.2rem;
+}
+
+.cs-user-toggle[aria-expanded="true"] .cs-chevron {
+    transform: rotate(180deg);
+}
+
+/* --- Dropdown Menu --- */
+.cs-dropdown-menu {
+    border: none !important;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 0.5rem !important;
+    margin-top: 0.6rem !important;
+    min-width: 240px;
+    background: #fff;
+    overflow: hidden;
+    animation: dropdownFadeIn 0.25s ease;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cs-dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    background: linear-gradient(135deg, var(--coffee-white) 0%, #fff 100%);
+    border-radius: 12px;
+    margin-bottom: 0.25rem;
+}
+
+.cs-dropdown-header strong {
+    display: block;
+    font-size: 0.9rem;
     color: var(--coffee-dark);
 }
 
-.navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.3) !important;
+.cs-dropdown-header small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
 }
 
-.navbar-toggler-icon {
-    filter: brightness(2);
+.cs-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 10px !important;
+    padding: 0.6rem 1rem !important;
+    font-size: 0.88rem;
+    color: var(--text-body) !important;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.cs-dropdown-item i {
+    font-size: 1rem;
+    color: var(--coffee-light);
+    width: 20px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.cs-dropdown-item:hover {
+    background: var(--coffee-white) !important;
+    color: var(--coffee-dark) !important;
+    transform: translateX(3px);
+}
+
+.cs-dropdown-item:hover i {
+    color: var(--accent-gold);
+}
+
+.cs-dropdown-logout {
+    color: var(--accent-red) !important;
+}
+
+.cs-dropdown-logout i {
+    color: var(--accent-red) !important;
+}
+
+.cs-dropdown-logout:hover {
+    background: #fef2f2 !important;
+    color: var(--accent-red) !important;
+}
+
+.cs-dropdown-menu .dropdown-divider {
+    margin: 0.3rem 0.8rem;
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* --- Auth Buttons (Not logged in) --- */
+.cs-auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+}
+
+.cs-btn-login {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.cs-btn-login:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.cs-btn-register {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    color: var(--coffee-dark);
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, #e0a95c 100%);
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(200, 150, 93, 0.3);
+}
+
+.cs-btn-register:hover {
+    color: var(--coffee-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(200, 150, 93, 0.45);
+}
+
+/* --- Navbar Mobile Responsive --- */
+@media (max-width: 991.98px) {
+    .cs-navbar .navbar-collapse {
+        background: linear-gradient(180deg, transparent 0%, rgba(26, 14, 8, 0.3) 100%);
+        padding: 0.5rem 0 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        margin-top: 0.3rem;
+    }
+
+    .cs-nav-main {
+        gap: 2px;
+        padding: 0.3rem 0;
+    }
+
+    .cs-nav-link {
+        padding: 0.7rem 1rem !important;
+        border-radius: 10px;
+    }
+
+    .cs-nav-link.active::after {
+        display: none;
+    }
+
+    .cs-nav-link.active {
+        background: rgba(200, 150, 93, 0.12);
+    }
+
+    .cs-nav-divider {
+        display: none !important;
+    }
+
+    .cs-nav-right {
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 0.6rem;
+        margin-top: 0.3rem;
+    }
+
+    .cs-user-toggle {
+        border-radius: 12px;
+        padding: 0.5rem 0.8rem !important;
+        width: 100%;
+    }
+
+    .cs-dropdown-menu {
+        position: static !important;
+        box-shadow: none !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 12px !important;
+        margin-top: 0.3rem !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .cs-dropdown-header {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .cs-dropdown-header strong {
+        color: #fff;
+    }
+
+    .cs-dropdown-header small {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .cs-dropdown-item {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .cs-dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #fff !important;
+    }
+
+    .cs-dropdown-logout {
+        color: #ff6b6b !important;
+    }
+
+    .cs-dropdown-logout:hover {
+        background: rgba(255, 107, 107, 0.1) !important;
+        color: #ff6b6b !important;
+    }
+
+    .cs-dropdown-menu .dropdown-divider {
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .cs-auth-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .cs-btn-login,
+    .cs-btn-register {
+        width: 100%;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+    }
+
+    .cs-nav-cart {
+        display: flex !important;
+    }
+
+    .cs-nav-cart .cs-cart-badge {
+        position: static;
+    }
 }
 
 /* --- Cards --- */

@@ -22,6 +22,7 @@ instance/
 # IDE
 .vscode/
 .idea/
+.cursor/
 *.swp
 *.swo
 *~
@@ -38,8 +39,9 @@ Thumbs.db
 # Logs
 *.log
 
-#text files
+# Text files (except requirements.txt)
 *.txt
+!requirements.txt
 
 # Static files uploads
 app/static/images/uploads/

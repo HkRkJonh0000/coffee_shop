@@ -115,3 +115,18 @@ database/
 4. Xem sản phẩm và thêm vào giỏ hàng
 5. Đặt hàng
 6. Đăng nhập lại admin để xem và cập nhật đơn hàng
+
+# Xem trạng thái
+docker-compose ps
+
+# Xem logs
+docker logs coffee_shop_web
+
+# Dừng
+docker-compose down
+
+# Khởi động lại
+docker-compose up -d
+
+# Xóa sạch data và rebuild
+docker-compose down -v && docker-compose up -d --build

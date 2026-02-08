@@ -53,8 +53,8 @@ class Order(db.Model):
         """Check if order can be cancelled"""
         return self.status in [OrderStatus.PENDING.value, OrderStatus.CONFIRMED.value]
     
-    def can_update_status(self, new_status):
-        """Check if status can be updated"""
+    def get_valid_transitions(self):
+        """Get valid next statuses for current status"""
         valid_transitions = {
             OrderStatus.PENDING.value: [OrderStatus.CONFIRMED.value, OrderStatus.CANCELLED.value],
             OrderStatus.CONFIRMED.value: [OrderStatus.PROCESSING.value, OrderStatus.CANCELLED.value],
@@ -63,7 +63,11 @@ class Order(db.Model):
             OrderStatus.DELIVERED.value: [],
             OrderStatus.CANCELLED.value: []
         }
-        return new_status in valid_transitions.get(self.status, [])
+        return valid_transitions.get(self.status, [])
+
+    def can_update_status(self, new_status):
+        """Check if status can be updated"""
+        return new_status in self.get_valid_transitions()
     
     def __repr__(self):
         return f'<Order {self.id} - {self.status}>'
