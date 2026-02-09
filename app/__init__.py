@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 from flask.cli import with_appcontext
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
@@ -197,6 +197,15 @@ def create_app(config_name=None):
     app.register_blueprint(products_bp, url_prefix='/products')
     app.register_blueprint(orders_bp, url_prefix='/orders')
     app.register_blueprint(dashboard_bp)
+    
+    # Favicon (nhiều trình duyệt tự gọi /favicon.ico)
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(
+            os.path.join(app.static_folder, 'images'),
+            'favicon.svg',
+            mimetype='image/svg+xml'
+        )
     
     # Register error handlers
     @app.errorhandler(404)

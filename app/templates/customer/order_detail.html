@@ -61,6 +61,23 @@
                     </span>
                 </p>
                 <p><strong>Ngày đặt:</strong><br><span class="text-muted">{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</span></p>
+                
+                <!-- Payment Info -->
+                <p><strong>Thanh toán:</strong><br>
+                    <span class="text-muted">{{ order.get_payment_method_display() }}</span>
+                </p>
+                <p><strong>Trạng thái TT:</strong><br>
+                    {% if order.payment_status == 'paid' %}
+                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> {{ order.get_payment_status_display() }}</span>
+                    {% elif order.payment_status == 'failed' %}
+                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> {{ order.get_payment_status_display() }}</span>
+                    {% elif order.payment_status == 'refunded' %}
+                        <span class="badge bg-info"><i class="bi bi-arrow-counterclockwise"></i> {{ order.get_payment_status_display() }}</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark"><i class="bi bi-clock"></i> {{ order.get_payment_status_display() }}</span>
+                    {% endif %}
+                </p>
+
                 {% if order.shipping_address %}
                     <p><strong>Địa chỉ:</strong><br><span class="text-muted">{{ order.shipping_address }}</span></p>
                 {% endif %}
@@ -68,6 +85,13 @@
                     <p><strong>Ghi chú:</strong><br><span class="text-muted">{{ order.notes }}</span></p>
                 {% endif %}
                 <hr style="border-color: #E8E0D8;">
+                
+                {% if order.payment_status != 'paid' and order.payment_method != 'cod' and order.status != 'cancelled' %}
+                    <a href="{{ url_for('orders.payment', id=order.id) }}" class="btn btn-primary w-100 mb-2">
+                        <i class="bi bi-credit-card"></i> Thanh toán ngay
+                    </a>
+                {% endif %}
+                
                 {% if order.can_cancel() %}
                     <form method="POST" action="{{ url_for('orders.cancel', id=order.id) }}">
                         <button type="submit" class="btn btn-danger w-100 mb-2" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">

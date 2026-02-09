@@ -2,7 +2,7 @@
 set -e
 
 echo "========================================="
-echo "  Coffee Shop - Starting deployment..."
+echo "  Brewly - Starting deployment..."
 echo "========================================="
 
 # Wait for MySQL to be ready
@@ -29,7 +29,7 @@ flask init-db || echo "  Database already initialized or init skipped."
 # Start the application
 echo "[3/3] Starting application server..."
 echo "========================================="
-echo "  Coffee Shop is running!"
+echo "  Brewly is running!"
 echo "  URL: http://0.0.0.0:5000"
 echo "  Admin: admin / admin123"
 echo "========================================="

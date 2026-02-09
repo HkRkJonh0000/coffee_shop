@@ -2,10 +2,10 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from flask_login import login_required, current_user
 from app.database.db import db
 from app.models.product import Product, Category
-from app.models.order import Order, OrderItem, OrderStatus
+from app.models.order import Order, OrderItem, OrderStatus, PaymentStatus
 from app.models.user import User, Role
 from app.utils.decorators import admin_required, manager_required, staff_required
-from app.utils.helpers import paginate_query, format_currency
+from app.utils.helpers import paginate_query, format_currency, save_uploaded_file
 from sqlalchemy import func, desc, or_
 from datetime import datetime, timedelta
 
@@ -109,18 +109,27 @@ def create_product():
         price = request.form.get('price')
         stock = request.form.get('stock')
         category_id = request.form.get('category_id')
+        image_file = request.files.get('image')
         
         if not all([name, price, category_id]):
             flash('Vui lòng điền đầy đủ thông tin bắt buộc.', 'danger')
             return redirect(url_for('admin.create_product'))
         
+        image_url = None
+        if image_file and image_file.filename:
+            image_url = save_uploaded_file(image_file, folder='products')
+            if not image_url:
+                flash('Định dạng hình ảnh không hợp lệ.', 'danger')
+                return redirect(url_for('admin.create_product'))
+
         try:
             product = Product(
                 name=name,
                 description=description,
                 price=float(price),
                 stock=int(stock) if stock else 0,
-                category_id=int(category_id)
+                category_id=int(category_id),
+                image_url=image_url
             )
             db.session.add(product)
             db.session.commit()
@@ -147,6 +156,14 @@ def edit_product(id):
         product.stock = int(request.form.get('stock'))
         product.category_id = int(request.form.get('category_id'))
         product.is_active = bool(request.form.get('is_active'))
+        image_file = request.files.get('image')
+
+        if image_file and image_file.filename:
+            image_url = save_uploaded_file(image_file, folder='products')
+            if not image_url:
+                flash('Định dạng hình ảnh không hợp lệ.', 'danger')
+                return redirect(url_for('admin.edit_product', id=id))
+            product.image_url = image_url
         
         try:
             db.session.commit()
@@ -226,6 +243,31 @@ def update_order_status(id):
         flash(f'Có lỗi xảy ra: {str(e)}', 'danger')
     
     return redirect(url_for('admin.order_detail', id=id))
+
+
+@admin_bp.route('/orders/<int:id>/update-payment', methods=['POST'])
+@login_required
+@staff_required
+def update_payment_status(id):
+    """Update order payment status"""
+    order = Order.query.get_or_404(id)
+    new_payment_status = request.form.get('payment_status')
+    
+    valid_statuses = [s.value for s in PaymentStatus]
+    if new_payment_status not in valid_statuses:
+        flash('Trạng thái thanh toán không hợp lệ.', 'danger')
+        return redirect(url_for('admin.order_detail', id=id))
+    
+    order.payment_status = new_payment_status
+    try:
+        db.session.commit()
+        flash('Cập nhật trạng thái thanh toán thành công!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Có lỗi xảy ra: {str(e)}', 'danger')
+    
+    return redirect(url_for('admin.order_detail', id=id))
+
 
 @admin_bp.route('/users')
 @login_required

@@ -275,6 +275,40 @@ waitress-serve --host=0.0.0.0 --port=5000 app:app
 
 Cài đặt URL Rewrite module và cấu hình reverse proxy đến localhost:5000
 
+## Đổi tên miền (ví dụ: Brewly.click)
+
+1. **Trong code:** Ứng dụng không hardcode tên miền; chỉ cần đổi branding (tên site) trong template nếu cần — đã dùng **Brewly** cho tên hiển thị.
+
+2. **DNS:** Trỏ tên miền mới (Brewly.click) về server của bạn:
+   - **A record** trỏ `Brewly.click` và `www.Brewly.click` tới IP server, **hoặc**
+   - **CNAME** trỏ tới tunnel/load balancer nếu dùng Cloudflare hoặc CDN.
+
+3. **Nginx (nếu dùng):** Sửa `server_name` trong site config:
+   ```nginx
+   server_name brewly.click www.brewly.click;
+   ```
+   Rồi: `sudo nginx -t && sudo systemctl reload nginx`
+
+4. **Cloudflare Tunnel (docker-compose):** Trong Cloudflare Dashboard → Zero Trust → Tunnels → chọn tunnel → Public Hostname: thêm hostname `brewly.click` (và `www.brewly.click` nếu cần) trỏ tới service `http://web:5000`. Có thể xóa hostname cũ (coffee-manager.click) sau khi chuyển xong.
+
+5. **SSL:** Nếu dùng Let's Encrypt: `sudo certbot --nginx -d brewly.click -d www.brewly.click`. Với Cloudflare Tunnel, SSL thường do Cloudflare cấp, không cần certbot trên server.
+
+## Sau khi cập nhật code (quan trọng)
+
+**Phải khởi động lại ứng dụng thì thay đổi mới có hiệu lực.**
+
+- **Systemd (Gunicorn):**
+  ```bash
+  sudo systemctl restart coffeeshop
+  ```
+- **Docker / Docker Compose** (áp dụng cho Brewly.click nếu chạy bằng Docker):
+  ```bash
+  cd /var/www/html/coffee_shop
+  docker-compose restart web
+  ```
+  Hoặc build lại nếu có thay đổi dependency: `docker-compose up -d --build web`
+- **Heroku:** push code sẽ tự deploy; nếu không thấy thay đổi thì kiểm tra build logs.
+
 ## Kiểm tra sau khi deploy
 
 1. **Kiểm tra ứng dụng chạy:**

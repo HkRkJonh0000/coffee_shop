@@ -70,12 +70,49 @@
                     </span>
                 </p>
                 <p><strong>Ngày đặt:</strong><br><span class="text-muted">{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</span></p>
+                
+                <!-- Payment Info -->
+                <p><strong>Thanh toán:</strong><br>
+                    <span class="text-muted">{{ order.get_payment_method_display() }}</span>
+                </p>
+                <p><strong>TT thanh toán:</strong><br>
+                    {% if order.payment_status == 'paid' %}
+                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> {{ order.get_payment_status_display() }}</span>
+                    {% elif order.payment_status == 'failed' %}
+                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> {{ order.get_payment_status_display() }}</span>
+                    {% elif order.payment_status == 'refunded' %}
+                        <span class="badge bg-info"><i class="bi bi-arrow-counterclockwise"></i> {{ order.get_payment_status_display() }}</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark"><i class="bi bi-clock"></i> {{ order.get_payment_status_display() }}</span>
+                    {% endif %}
+                </p>
+
                 {% if order.shipping_address %}
                     <p><strong>Địa chỉ:</strong><br><span class="text-muted">{{ order.shipping_address }}</span></p>
                 {% endif %}
                 {% if order.notes %}
                     <p><strong>Ghi chú:</strong><br><span class="text-muted">{{ order.notes }}</span></p>
                 {% endif %}
+            </div>
+        </div>
+
+        <!-- Payment Status Update -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-credit-card"></i> Cập nhật thanh toán</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.update_payment_status', id=order.id) }}">
+                    <select class="form-select mb-3" name="payment_status" required>
+                        <option value="unpaid" {% if order.payment_status == 'unpaid' %}selected{% endif %}>Chưa thanh toán</option>
+                        <option value="paid" {% if order.payment_status == 'paid' %}selected{% endif %}>Đã thanh toán</option>
+                        <option value="failed" {% if order.payment_status == 'failed' %}selected{% endif %}>Thanh toán thất bại</option>
+                        <option value="refunded" {% if order.payment_status == 'refunded' %}selected{% endif %}>Đã hoàn tiền</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-check-circle"></i> Cập nhật TT
+                    </button>
+                </form>
             </div>
         </div>
 

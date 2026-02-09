@@ -1,4 +1,4 @@
-// Main JavaScript file for Coffee Shop
+// Main JavaScript file for Brewly
 
 document.addEventListener('DOMContentLoaded', function() {
     // --- Navbar scroll effect ---

@@ -19,7 +19,7 @@
     <div class="col-lg-8">
         <div class="card">
             <div class="card-body p-4">
-                <form method="POST" action="{{ url_for('admin.edit_product', id=product.id) if product else url_for('admin.create_product') }}">
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('admin.edit_product', id=product.id) if product else url_for('admin.create_product') }}">
                     <div class="mb-3">
                         <label for="name" class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ product.name if product else '' }}" placeholder="Nhập tên sản phẩm" required>
@@ -27,6 +27,16 @@
                     <div class="mb-3">
                         <label for="description" class="form-label">Mô tả</label>
                         <textarea class="form-control" id="description" name="description" rows="4" placeholder="Mô tả sản phẩm...">{{ product.description if product else '' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Hình ảnh</label>
+                        {% if product and product.image_url %}
+                            <div class="mb-2">
+                                <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.name }}" class="img-thumbnail" style="max-width: 220px; height: auto;">
+                            </div>
+                        {% endif %}
+                        <input type="file" class="form-control" id="image" name="image" accept=".png,.jpg,.jpeg,.gif,image/*">
+                        <div class="form-text">Chấp nhận: png, jpg, jpeg, gif.</div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">

@@ -11,6 +11,21 @@ class OrderStatus(Enum):
     DELIVERED = 'delivered'
     CANCELLED = 'cancelled'
 
+class PaymentMethod(Enum):
+    """Payment method enumeration"""
+    COD = 'cod'
+    BANK_TRANSFER = 'bank_transfer'
+    MOMO = 'momo'
+    ZALOPAY = 'zalopay'
+    VNPAY = 'vnpay'
+
+class PaymentStatus(Enum):
+    """Payment status enumeration"""
+    UNPAID = 'unpaid'
+    PAID = 'paid'
+    FAILED = 'failed'
+    REFUNDED = 'refunded'
+
 class Order(db.Model):
     """Order model"""
     __tablename__ = 'orders'
@@ -19,6 +34,8 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     total_amount = db.Column(db.Numeric(10, 2), nullable=False)
     status = db.Column(db.String(20), default=OrderStatus.PENDING.value, nullable=False)
+    payment_method = db.Column(db.String(20), default=PaymentMethod.COD.value)
+    payment_status = db.Column(db.String(20), default=PaymentStatus.UNPAID.value)
     shipping_address = db.Column(db.Text)
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
@@ -52,6 +69,27 @@ class Order(db.Model):
     def can_cancel(self):
         """Check if order can be cancelled"""
         return self.status in [OrderStatus.PENDING.value, OrderStatus.CONFIRMED.value]
+
+    def get_payment_method_display(self):
+        """Get human-readable payment method"""
+        method_map = {
+            'cod': 'Thanh toán khi nhận hàng (COD)',
+            'bank_transfer': 'Chuyển khoản ngân hàng',
+            'momo': 'Ví MoMo',
+            'zalopay': 'ZaloPay',
+            'vnpay': 'VNPay',
+        }
+        return method_map.get(self.payment_method, self.payment_method or 'COD')
+
+    def get_payment_status_display(self):
+        """Get human-readable payment status"""
+        status_map = {
+            'unpaid': 'Chưa thanh toán',
+            'paid': 'Đã thanh toán',
+            'failed': 'Thanh toán thất bại',
+            'refunded': 'Đã hoàn tiền',
+        }
+        return status_map.get(self.payment_status, self.payment_status or 'Chưa thanh toán')
     
     def get_valid_transitions(self):
         """Get valid next statuses for current status"""

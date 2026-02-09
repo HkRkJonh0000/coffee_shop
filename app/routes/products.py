@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, session, flash, redirect,
 from flask_login import login_required, current_user
 from app.models.product import Product, Category
 from app.utils.helpers import paginate_query
+from app.utils.decorators import login_required_customer
 from app.database.db import db
 
 products_bp = Blueprint('products', __name__)
@@ -53,6 +54,7 @@ def save_cart(cart):
     session['cart'] = cart
 
 @products_bp.route('/add-to-cart/<int:product_id>', methods=['POST'])
+@login_required_customer
 def add_to_cart(product_id):
     """Add product to cart"""
     product = Product.query.get_or_404(product_id)
@@ -75,6 +77,7 @@ def add_to_cart(product_id):
     return redirect(request.referrer or url_for('products.index'))
 
 @products_bp.route('/cart')
+@login_required_customer
 def cart():
     """Shopping cart page"""
     cart = get_cart()
@@ -95,6 +98,7 @@ def cart():
     return render_template('customer/cart.html', cart_items=cart_items, total=total)
 
 @products_bp.route('/cart/update', methods=['POST'])
+@login_required_customer
 def update_cart():
     """Update cart item quantity"""
     cart = get_cart()
@@ -114,6 +118,7 @@ def update_cart():
     return redirect(url_for('products.cart'))
 
 @products_bp.route('/cart/remove/<int:product_id>', methods=['POST'])
+@login_required_customer
 def remove_from_cart(product_id):
     """Remove product from cart"""
     cart = get_cart()
@@ -123,6 +128,7 @@ def remove_from_cart(product_id):
     return redirect(url_for('products.cart'))
 
 @products_bp.route('/cart/clear', methods=['POST'])
+@login_required_customer
 def clear_cart():
     """Clear cart"""
     save_cart({})

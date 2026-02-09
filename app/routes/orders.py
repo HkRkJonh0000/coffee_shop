@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from flask_login import login_required, current_user
 from app.database.db import db
-from app.models.order import Order, OrderItem, OrderStatus
+from app.models.order import Order, OrderItem, OrderStatus, PaymentMethod, PaymentStatus
 from app.models.product import Product
 from app.utils.decorators import login_required_customer, staff_required
 from app.utils.helpers import paginate_query
@@ -62,12 +62,20 @@ def create():
     # Create order
     shipping_address = request.form.get('shipping_address', '')
     notes = request.form.get('notes', '')
+    payment_method = request.form.get('payment_method', 'cod')
+    
+    # Validate payment method
+    valid_methods = [m.value for m in PaymentMethod]
+    if payment_method not in valid_methods:
+        payment_method = 'cod'
     
     try:
         order = Order(
             user_id=current_user.id,
             total_amount=total_amount,
             status=OrderStatus.PENDING.value,
+            payment_method=payment_method,
+            payment_status=PaymentStatus.UNPAID.value,
             shipping_address=shipping_address or current_user.address,
             notes=notes
         )
@@ -92,8 +100,15 @@ def create():
         # Clear cart
         session['cart'] = {}
         
-        flash('Đặt hàng thành công!', 'success')
-        return redirect(url_for('orders.detail', id=order.id))
+        # Redirect based on payment method
+        if payment_method == 'cod':
+            order.payment_status = PaymentStatus.UNPAID.value
+            db.session.commit()
+            flash('Đặt hàng thành công! Bạn sẽ thanh toán khi nhận hàng.', 'success')
+            return redirect(url_for('orders.detail', id=order.id))
+        else:
+            # Redirect to payment page for e-payment
+            return redirect(url_for('orders.payment', id=order.id))
     
     except Exception as e:
         db.session.rollback()
@@ -114,6 +129,59 @@ def detail(id):
     
     template = 'admin/order_detail.html' if current_user.can_manage_orders() else 'customer/order_detail.html'
     return render_template(template, order=order)
+
+@orders_bp.route('/<int:id>/payment')
+@login_required_customer
+def payment(id):
+    """Payment page for electronic payment methods"""
+    order = Order.query.get_or_404(id)
+    
+    if order.user_id != current_user.id:
+        flash('Bạn không có quyền truy cập đơn hàng này.', 'danger')
+        return redirect(url_for('orders.index'))
+    
+    if order.payment_status == PaymentStatus.PAID.value:
+        flash('Đơn hàng này đã được thanh toán.', 'info')
+        return redirect(url_for('orders.detail', id=order.id))
+    
+    # Bank transfer info
+    bank_info = {
+        'bank_name': 'Techcombank',
+        'account_number': '1903 7249 3660 15',
+        'account_holder': 'HUA HONG PHUOC',
+        'branch': '',
+        'transfer_content': f'COFFEE {order.id}'
+    }
+    
+    return render_template('customer/payment.html', 
+                         order=order, 
+                         bank_info=bank_info)
+
+
+@orders_bp.route('/<int:id>/confirm-payment', methods=['POST'])
+@login_required_customer
+def confirm_payment(id):
+    """Customer confirms payment was made"""
+    order = Order.query.get_or_404(id)
+    
+    if order.user_id != current_user.id:
+        flash('Bạn không có quyền truy cập đơn hàng này.', 'danger')
+        return redirect(url_for('orders.index'))
+    
+    if order.payment_status == PaymentStatus.PAID.value:
+        flash('Đơn hàng này đã được thanh toán.', 'info')
+        return redirect(url_for('orders.detail', id=order.id))
+    
+    try:
+        order.payment_status = PaymentStatus.PAID.value
+        db.session.commit()
+        flash('Xác nhận thanh toán thành công! Chúng tôi sẽ xử lý đơn hàng sớm nhất.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Có lỗi xảy ra: {str(e)}', 'danger')
+    
+    return redirect(url_for('orders.detail', id=order.id))
+
 
 @orders_bp.route('/<int:id>/cancel', methods=['POST'])
 @login_required_customer

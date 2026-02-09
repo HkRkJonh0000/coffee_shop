@@ -128,5 +128,8 @@ docker-compose down
 # Khởi động lại
 docker-compose up -d
 
-# Xóa sạch data và rebuild
-docker-compose down -v && docker-compose up -d --build
+# Rebuild container (GIỮ dữ liệu database + ảnh)
+docker-compose down && docker-compose up -d --build
+
+# CHỈ dùng khi muốn XÓA SẠCH toàn bộ dữ liệu (database + ảnh upload):
+# docker-compose down -v && docker-compose up -d --build

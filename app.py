@@ -1,6 +1,6 @@
 """
-Coffee Shop Management System
-Main application entry point
+Hệ thống Quản lý Quán Cà Phê
+Điểm nhập chính của ứng dụng
 """
 import os
 from app import create_app

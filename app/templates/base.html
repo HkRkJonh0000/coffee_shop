@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Coffee Shop - Qu&#7843;n l&#253; & B&#225;n c&#224; ph&#234;{% endblock %}</title>
+    <title>{% block title %}Brewly - Qu&#7843;n l&#253; & B&#225;n c&#224; ph&#234;{% endblock %}</title>
+    <!-- Favicon (data URI = luôn hiển thị, không phụ thuộc đường dẫn file) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Ccircle cx='16' cy='16' r='15' fill='%238B6914'/%3E%3Cpath d='M10 10h4v2c0 3.3 2.7 6 6 6s6-2.7 6-6v-2h2v2c0 4.4-3.6 8-8 8s-8-3.6-8-8v-2h-4z' fill='%23fff'/%3E%3Cpath d='M10 20v2h12v-2H10z' fill='%23fff'/%3E%3Cellipse cx='16' cy='10' rx='6' ry='2' fill='%23C8965D'/%3E%3C/svg%3E">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.svg') }}" type="image/svg+xml" sizes="any">
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -28,7 +31,7 @@
                     <i class="bi bi-cup-hot-fill"></i>
                 </span>
                 <span class="cs-brand-text">
-                    <span class="cs-brand-name">Coffee Shop</span>
+                    <span class="cs-brand-name">Brewly</span>
                     <span class="cs-brand-tagline">Premium Quality</span>
                 </span>
             </a>
@@ -54,6 +57,18 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <!-- Main Navigation -->
                 <ul class="navbar-nav me-auto cs-nav-main">
+                    <li class="nav-item">
+                        <a class="nav-link cs-nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %}" href="{{ url_for('dashboard.index') }}">
+                            <i class="bi bi-house"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link cs-nav-link {% if request.endpoint == 'dashboard.about' %}active{% endif %}" href="{{ url_for('dashboard.about') }}">
+                            <i class="bi bi-info-circle"></i>
+                            <span>Giới thiệu</span>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link cs-nav-link {% if request.endpoint and 'products' in request.endpoint %}active{% endif %}" href="{{ url_for('products.index') }}">
                             <i class="bi bi-shop"></i>
@@ -202,7 +217,7 @@
         <div class="container text-center">
             <p class="mb-1">
                 <i class="bi bi-cup-hot-fill" style="color: #C8965D;"></i>
-                <strong style="color: rgba(255,255,255,0.8);">Coffee Shop</strong>
+                <strong style="color: rgba(255,255,255,0.8);">Brewly</strong>
             </p>
             <p class="mb-0">&copy; 2024 H&#7879; th&#7889;ng qu&#7843;n l&#253; & b&#225;n c&#224; ph&#234;. &#272;&#7891; &#225;n t&#7889;t nghi&#7879;p CNTT.</p>
         </div>

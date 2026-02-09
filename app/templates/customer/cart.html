@@ -82,6 +82,81 @@
                             </label>
                             <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="Ghi chú cho đơn hàng..."></textarea>
                         </div>
+
+                        <!-- Phương thức thanh toán -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-credit-card"></i> Phương thức thanh toán
+                            </label>
+                            
+                            <div class="payment-methods">
+                                <div class="form-check payment-option p-3 mb-2 rounded border" style="cursor: pointer;">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="pay_cod" value="cod" checked>
+                                    <label class="form-check-label w-100" for="pay_cod" style="cursor: pointer;">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-cash-coin text-success me-2" style="font-size: 1.4rem;"></i>
+                                            <div>
+                                                <strong>Thanh toán khi nhận hàng (COD)</strong>
+                                                <br><small class="text-muted">Trả tiền mặt khi nhận hàng</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check payment-option p-3 mb-2 rounded border" style="cursor: pointer;">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="pay_bank" value="bank_transfer">
+                                    <label class="form-check-label w-100" for="pay_bank" style="cursor: pointer;">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-bank text-primary me-2" style="font-size: 1.4rem;"></i>
+                                            <div>
+                                                <strong>Chuyển khoản ngân hàng</strong>
+                                                <br><small class="text-muted">Chuyển khoản qua tài khoản ngân hàng</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check payment-option p-3 mb-2 rounded border" style="cursor: pointer;">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="pay_momo" value="momo">
+                                    <label class="form-check-label w-100" for="pay_momo" style="cursor: pointer;">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-phone text-danger me-2" style="font-size: 1.4rem;"></i>
+                                            <div>
+                                                <strong>Ví MoMo</strong>
+                                                <br><small class="text-muted">Thanh toán qua ví điện tử MoMo</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check payment-option p-3 mb-2 rounded border" style="cursor: pointer;">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="pay_zalopay" value="zalopay">
+                                    <label class="form-check-label w-100" for="pay_zalopay" style="cursor: pointer;">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-wallet2 text-info me-2" style="font-size: 1.4rem;"></i>
+                                            <div>
+                                                <strong>ZaloPay</strong>
+                                                <br><small class="text-muted">Thanh toán qua ví điện tử ZaloPay</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check payment-option p-3 mb-2 rounded border" style="cursor: pointer;">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="pay_vnpay" value="vnpay">
+                                    <label class="form-check-label w-100" for="pay_vnpay" style="cursor: pointer;">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-qr-code text-warning me-2" style="font-size: 1.4rem;"></i>
+                                            <div>
+                                                <strong>VNPay</strong>
+                                                <br><small class="text-muted">Thanh toán qua cổng VNPay</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-success w-100 btn-lg">
                             <i class="bi bi-check-circle"></i> Đặt hàng
                         </button>
@@ -103,4 +178,22 @@
         </a>
     </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .payment-option {
+        transition: all 0.2s ease;
+        border-color: #dee2e6 !important;
+    }
+    .payment-option:hover {
+        border-color: var(--coffee-primary, #8B6914) !important;
+        background-color: #faf6ef;
+    }
+    .payment-option:has(input:checked) {
+        border-color: var(--coffee-primary, #8B6914) !important;
+        background-color: #faf6ef;
+        box-shadow: 0 0 0 2px rgba(139, 105, 20, 0.2);
+    }
+</style>
 {% endblock %}
