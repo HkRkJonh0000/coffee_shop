@@ -1,10 +1,10 @@
-# Hệ thống quản lý & bán cà phê
+# Brewly Coffee Shop
 
-Đồ án tốt nghiệp CNTT - Hệ thống website quản lý & bán cà phê sử dụng Flask + SQLAlchemy ORM + MySQL
+Website bán cà phê online với hệ thống quản lý đơn hàng, kho, và tài khoản khách hàng.
 
-## Tổng quan
+## Giới thiệu
 
-Hệ thống quản lý & bán cà phê là một ứng dụng web hoàn chỉnh được xây dựng bằng Flask framework, sử dụng SQLAlchemy ORM để quản lý database MySQL. Hệ thống hỗ trợ nhiều vai trò người dùng và các chức năng quản lý đầy đủ.
+Brewly là nền tảng mua cà phê online, từ cà phê phin, espresso đến các loại hòa tan. Website được xây dựng bằng Flask + MySQL, hỗ trợ thanh toán COD và chuyển khoản QR, phân quyền đa cấp (admin, manager, staff, customer).
 
 ## Tính năng chính
 

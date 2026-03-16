@@ -15,7 +15,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
@@ -32,7 +32,7 @@
                 </span>
                 <span class="cs-brand-text">
                     <span class="cs-brand-name">Brewly</span>
-                    <span class="cs-brand-tagline">Premium Quality</span>
+                    <span class="cs-brand-tagline">Coffee & Stories</span>
                 </span>
             </a>
 
@@ -70,7 +70,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link cs-nav-link {% if request.endpoint and 'products' in request.endpoint %}active{% endif %}" href="{{ url_for('products.index') }}">
+                        <a class="nav-link cs-nav-link {% if request.endpoint == 'products.index' or request.endpoint == 'products.detail' %}active{% endif %}" href="{{ url_for('products.index') }}">
                             <i class="bi bi-shop"></i>
                             <span>Sản phẩm</span>
                         </a>
@@ -218,8 +218,9 @@
             <p class="mb-1">
                 <i class="bi bi-cup-hot-fill" style="color: #C8965D;"></i>
                 <strong style="color: rgba(255,255,255,0.8);">Brewly</strong>
+                <span style="color: rgba(255,255,255,0.5); margin-left: 0.5rem;">Coffee & Stories</span>
             </p>
-            <p class="mb-0">&copy; 2024 H&#7879; th&#7889;ng qu&#7843;n l&#253; & b&#225;n c&#224; ph&#234;. &#272;&#7891; &#225;n t&#7889;t nghi&#7879;p CNTT.</p>
+            <p class="mb-0" style="color: rgba(255,255,255,0.5);">© 2026 Brewly. Mua cà phê online dễ dàng, giao tận nơi.</p>
         </div>
     </footer>
 

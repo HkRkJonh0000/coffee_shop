@@ -34,9 +34,18 @@ class Product(db.Model):
     # Relationships
     order_items = db.relationship('OrderItem', backref='product', lazy=True)
     
+    @property
+    def display_image_url(self):
+        """URL ảnh hiển thị. Map đường dẫn cũ (products/) sang coffee-boxes/ để ảnh hộp không bị volume Docker ghi đè."""
+        if not self.image_url:
+            return None
+        if 'coffee-box-' in self.image_url and 'images/products/' in self.image_url:
+            return self.image_url.replace('images/products/', 'images/coffee-boxes/')
+        return self.image_url
+
     def format_price(self):
         """Format price as currency"""
-        return f"{float(self.price):,.0f} đ"
+        return "{:,.0f}đ".format(float(self.price)).replace(',', '.')
     
     def is_in_stock(self):
         """Check if product is in stock"""

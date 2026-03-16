@@ -12,18 +12,26 @@
 
 <div class="row g-5">
     <div class="col-lg-6">
-        <div class="card" style="border-radius: var(--radius-xl); overflow: hidden;">
-            {% if product.image_url %}
-                <img src="{{ url_for('static', filename=product.image_url) }}" class="img-fluid" alt="{{ product.name }}" style="width: 100%; height: 450px; object-fit: cover;">
+        <div class="card" style="border-radius: var(--radius-xl); overflow: hidden; background: #FFF8F0;">
+            {% if product.display_image_url %}
+                <img src="{{ url_for('static', filename=product.display_image_url) }}" class="img-fluid" alt="{{ product.name }}" style="width: 100%; height: 450px; object-fit: {{ 'contain' if product.category and product.category.name == 'Cà phê hộp' else 'cover' }}; padding: {{ '1rem' if product.category and product.category.name == 'Cà phê hộp' else '0' }};">
+            {% elif product.category and product.category.name == 'Cà phê hộp' %}
+                <img src="{{ url_for('static', filename='images/coffee-boxes/coffee-box-default.svg') }}" class="img-fluid" alt="{{ product.name }}" style="width: 100%; height: 450px; object-fit: contain; padding: 1rem;">
             {% else %}
                 <div class="product-img-placeholder" style="height: 450px; border-radius: 0;">
                     <i class="bi bi-cup-hot" style="font-size: 5rem;"></i>
                 </div>
             {% endif %}
         </div>
+        {% if product.category and product.category.name == 'Cà phê hộp' and (not product.image_url or (product.display_image_url and 'coffee-boxes' in product.display_image_url)) %}
+        <p class="small text-muted mt-2 mb-0"><i class="bi bi-image"></i> Ảnh minh họa. Quản trị viên có thể tải ảnh thật tại <strong>Quản trị → Sản phẩm → Chỉnh sửa</strong>.</p>
+        {% endif %}
     </div>
     <div class="col-lg-6">
         <span class="badge bg-primary mb-3" style="font-size: 0.85rem;">{{ product.category.name }}</span>
+        {% if product.category and product.category.name == 'Cà phê hộp' %}
+        <p class="text-muted small mb-2"><i class="bi bi-box-seam"></i> Cà phê hòa tan đóng hộp (nhiều gói nhỏ), pha với nước nóng là dùng được.</p>
+        {% endif %}
         <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem;">{{ product.name }}</h1>
         
         <div class="d-flex align-items-center gap-3 mb-4">

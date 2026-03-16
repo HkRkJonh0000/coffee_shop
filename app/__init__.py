@@ -59,6 +59,7 @@ def register_cli(app):
             {'name': 'Cà phê sữa', 'description': 'Cà phê pha với sữa'},
             {'name': 'Espresso', 'description': 'Cà phê espresso và các biến thể'},
             {'name': 'Cà phê pha máy', 'description': 'Cà phê pha bằng máy pha chế'},
+            {'name': 'Cà phê hộp', 'description': 'Cà phê đóng gói dạng hộp các hãng'},
             {'name': 'Đồ uống khác', 'description': 'Các loại đồ uống khác'}
         ]
 
@@ -144,6 +145,55 @@ def register_cli(app):
                 'stock': 50,
                 'category_name': 'Espresso'
             },
+            # Cà phê hộp - các hãng
+            {
+                'name': 'Trung Nguyên G7 (Hộp 16 gói)',
+                'description': 'Cà phê hòa tan Trung Nguyên G7, hộp 16 gói, thơm đậm đà',
+                'price': 65000,
+                'stock': 80,
+                'category_name': 'Cà phê hộp',
+                'image_url': 'images/coffee-boxes/coffee-box-trung-nguyen.svg'
+            },
+            {
+                'name': 'Nestlé Nescafé (Hộp 20 gói)',
+                'description': 'Cà phê hòa tan Nestlé Nescafé, hộp 20 gói',
+                'price': 72000,
+                'stock': 60,
+                'category_name': 'Cà phê hộp',
+                'image_url': 'images/coffee-boxes/coffee-box-nescafe.svg'
+            },
+            {
+                'name': 'Vinacafe (Hộp 20 gói)',
+                'description': 'Cà phê hòa tan Vinacafe truyền thống, hộp 20 gói',
+                'price': 58000,
+                'stock': 70,
+                'category_name': 'Cà phê hộp',
+                'image_url': 'images/coffee-boxes/coffee-box-vinacafe.svg'
+            },
+            {
+                'name': 'Highlands Coffee (Hộp 12 gói)',
+                'description': 'Cà phê sữa đá Highlands hộp 12 gói, tiện lợi',
+                'price': 89000,
+                'stock': 50,
+                'category_name': 'Cà phê hộp',
+                'image_url': 'images/coffee-boxes/coffee-box-highlands.svg'
+            },
+            {
+                'name': 'Cà phê Phúc Long (Hộp 15 gói)',
+                'description': 'Cà phê hòa tan Phúc Long, hộp 15 gói',
+                'price': 75000,
+                'stock': 45,
+                'category_name': 'Cà phê hộp',
+                'image_url': 'images/coffee-boxes/coffee-box-phuclong.svg'
+            },
+            {
+                'name': 'Cà phê Wake Up 339 (Hộp 20 gói)',
+                'description': 'Cà phê hòa tan Wake Up 339, hộp 20 gói',
+                'price': 55000,
+                'stock': 65,
+                'category_name': 'Cà phê hộp',
+                'image_url': 'images/coffee-boxes/coffee-box-wakeup.svg'
+            },
         ]
 
         for prod_data in products_data:
@@ -158,7 +208,8 @@ def register_cli(app):
                     description=prod_data['description'],
                     price=prod_data['price'],
                     stock=prod_data['stock'],
-                    category_id=category_id
+                    category_id=category_id,
+                    image_url=prod_data.get('image_url')
                 )
                 db.session.add(product)
 
@@ -197,6 +248,15 @@ def create_app(config_name=None):
     app.register_blueprint(products_bp, url_prefix='/products')
     app.register_blueprint(orders_bp, url_prefix='/orders')
     app.register_blueprint(dashboard_bp)
+    
+    # Register custom filters
+    @app.template_filter('format_currency')
+    def format_currency(value):
+        """Format number with thousand separator (dot) and currency symbol"""
+        try:
+            return "{:,.0f}đ".format(float(value)).replace(',', '.')
+        except (ValueError, TypeError):
+            return f"{value}đ"
     
     # Favicon (nhiều trình duyệt tự gọi /favicon.ico)
     @app.route('/favicon.ico')

@@ -52,7 +52,7 @@ class Order(db.Model):
     
     def format_total(self):
         """Format total as currency"""
-        return f"{float(self.total_amount):,.0f} đ"
+        return "{:,.0f}đ".format(float(self.total_amount)).replace(',', '.')
     
     def get_status_display(self):
         """Get human-readable status"""
@@ -128,7 +128,7 @@ class OrderItem(db.Model):
     
     def format_subtotal(self):
         """Format subtotal as currency"""
-        return f"{self.subtotal:,.0f} đ"
+        return "{:,.0f}đ".format(float(self.subtotal)).replace(',', '.')
     
     def __repr__(self):
         return f'<OrderItem {self.id} - Qty: {self.quantity}>'

@@ -42,10 +42,11 @@
 /* --- Base Reset & Body --- */
 *, *::before, *::after {
     box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--bg-body);
     color: var(--text-body);
     min-height: 100vh;
@@ -60,7 +61,7 @@ main {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-dark);
     font-weight: 600;
 }
@@ -73,6 +74,11 @@ a {
 
 a:hover {
     color: var(--coffee-dark);
+}
+
+/* Đảm bảo form & nút luôn dùng font không chân */
+input, button, select, textarea, optgroup, .form-control, .form-select, .btn {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
 /* --- Navbar (Premium Design) --- */
@@ -129,7 +135,7 @@ a:hover {
 }
 
 .cs-brand-name {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 700;
     font-size: 1.25rem;
     color: #fff;
@@ -692,13 +698,21 @@ a:hover {
     transition: var(--transition);
 }
 
-.product-card:hover .card-img-top {
-    transform: scale(1.08);
-}
-
+/* Ảnh sản phẩm dạng hộp (SVG): hiển thị đủ khung, nền rõ */
 .product-card .card-img-wrap {
     overflow: hidden;
     position: relative;
+    background: var(--coffee-white, #FFF8F0);
+}
+
+.product-card .card-img-top.product-img {
+    object-fit: contain;
+    padding: 12px;
+    background: var(--coffee-white, #FFF8F0);
+}
+
+.product-card:hover .card-img-top {
+    transform: scale(1.08);
 }
 
 .product-card .card-img-wrap::after {
@@ -707,9 +721,23 @@ a:hover {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.03));
+    height: 40px;
+    background: linear-gradient(transparent, rgba(255,248,240,0.9));
     pointer-events: none;
+}
+
+.product-card .img-hint {
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    right: 8px;
+    font-size: 0.7rem;
+    color: #6c757d;
+    text-align: center;
+    background: rgba(255,255,255,0.9);
+    padding: 4px 6px;
+    border-radius: 4px;
+    z-index: 1;
 }
 
 .product-img-placeholder {
@@ -730,7 +758,7 @@ a:hover {
 }
 
 .product-card .card-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--coffee-dark);
@@ -744,7 +772,7 @@ a:hover {
 }
 
 .product-price {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.35rem;
     font-weight: 700;
     color: var(--accent-red);
@@ -799,7 +827,7 @@ a:hover {
 
 .stat-card h2 {
     color: #fff;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 0;
@@ -1052,7 +1080,7 @@ a:hover {
 
 .auth-card .card-header h4 {
     color: #fff;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.5rem;
     margin-bottom: 0;
 }
@@ -1071,12 +1099,12 @@ a:hover {
 .filter-card .card-header {
     background: transparent;
     border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* --- Section Headings --- */
 .section-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--coffee-dark);
@@ -1114,7 +1142,7 @@ footer p {
 }
 
 .error-page h1 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 8rem;
     font-weight: 700;
     background: linear-gradient(135deg, var(--coffee-brown) 0%, var(--accent-gold) 100%);
@@ -1177,7 +1205,7 @@ footer p {
 .chart-card .card-header {
     background: transparent;
     border-bottom: 1px solid #F0EBE5;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 600;
 }
 

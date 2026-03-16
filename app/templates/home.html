@@ -12,6 +12,13 @@
         position: relative;
         overflow: hidden;
     }
+    .hero-blog-title {
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #FFF7EC;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
+        letter-spacing: 0.02em;
+    }
     .hero-blog::after {
         content: "";
         position: absolute;
@@ -94,12 +101,13 @@
             <span class="hero-badge mb-3">
                 <i class="bi bi-journal-text"></i> Blog Brewly
             </span>
-            <h1 class="mb-3" style="font-family: 'Playfair Display', serif;">
-                Khám phá văn hóa cà phê & cảm hứng mỗi ngày
+            <h1 class="mb-3 hero-blog-title">
+                Hành Trình Cà Phê &amp; Những Câu Chuyện Đáng Nhớ
             </h1>
             <p class="mb-4" style="color: rgba(255,255,255,0.85);">
-                Từ hạt cà phê chất lượng đến bí quyết pha chế, chúng tôi chia sẻ kiến thức
-                giúp bạn thưởng thức trọn vẹn hơn.
+                Từ ly cà phê đầu tiên buổi sáng, những câu chuyện về hạt rang, 
+                đến bí quyết pha chế mà mình đúc kết được. Đây là nơi chia sẻ về cà phê, 
+                không cầu kỳ nhưng thật lòng.
             </p>
             <div class="d-flex gap-2 flex-wrap">
                 <a href="{{ url_for('products.index') }}" class="btn btn-light">
@@ -219,8 +227,10 @@
         {% for product in latest_products %}
         <div class="col-6 col-md-4 col-lg-2">
             <div class="product-mini-card">
-                {% if product.image_url %}
-                    <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.name }}">
+                {% if product.display_image_url %}
+                    <img src="{{ url_for('static', filename=product.display_image_url) }}" alt="{{ product.name }}" style="object-fit: contain; background: #FFF8F0;">
+                {% elif product.category and product.category.name == 'Cà phê hộp' %}
+                    <img src="{{ url_for('static', filename='images/coffee-boxes/coffee-box-default.svg') }}" alt="{{ product.name }}" style="object-fit: contain; background: #FFF8F0;">
                 {% else %}
                     <div class="d-flex align-items-center justify-content-center" style="height: 150px; background: #faf6ef;">
                         <i class="bi bi-cup-hot" style="font-size: 2rem; color: #6F4E37;"></i>

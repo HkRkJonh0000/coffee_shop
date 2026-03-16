@@ -35,8 +35,10 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
+    # Khi chạy trên host (không trong Docker): dùng localhost:3307 (MySQL trong Docker map ra 3307).
+    # Khi chạy trong Docker: cần set DATABASE_URL=...@db:3306/... (docker-compose đã set).
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://rikai:Admin%40123@db:3306/coffee_shop?charset=utf8mb4'
+        'mysql+pymysql://rikai:Admin%40123@127.0.0.1:3307/coffee_shop?charset=utf8mb4'
     SQLALCHEMY_ECHO = True
 
 class ProductionConfig(Config):

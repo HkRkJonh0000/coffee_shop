@@ -38,7 +38,7 @@
                             {% for item in order.items %}
                                 <tr>
                                     <td><strong>{{ item.product.name }}</strong></td>
-                                    <td>{{ item.price|round(0)|int }} đ</td>
+                                    <td>{{ item.price|format_currency }}</td>
                                     <td>{{ item.quantity }}</td>
                                     <td><strong>{{ item.format_subtotal() }}</strong></td>
                                 </tr>

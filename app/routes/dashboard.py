@@ -13,87 +13,61 @@ def get_blog_posts():
     """Static blog posts for landing page"""
     return [
         {
-            'slug': 'bi-quyet-chon-hat-ca-phe-ngon-cho-nguoi-moi',
-            'title': 'Bí quyết chọn hạt cà phê ngon cho người mới',
-            'excerpt': 'Chọn đúng hạt là bước đầu để có ly cà phê chất lượng. Dưới đây là những tiêu chí dễ áp dụng...',
+            'slug': 'cach-phan-biet-robusta-va-arabica-cho-nguoi-moi',
+            'title': 'Cách phân biệt Robusta và Arabica cho người mới uống',
+            'excerpt': 'Robusta đắng, caffeine cao, giá rẻ. Arabica chua nhẹ, thơm phức tạp, giá cao hơn. Nhưng uống sao cho hợp khẩu vị mới là quan trọng...',
             'category': 'Hạt cà phê',
-            'read_time': '5 phút đọc',
-            'date': 'Thứ 2, 10/02/2026',
-            'icon': 'bi-bag-heart',
+            'read_time': '4 phút đọc',
+            'date': '16/03/2026',
+            'icon': 'bi-cup-straw',
             'content': [
-                'Khi mới bắt đầu, hãy ưu tiên hạt có hương thơm rõ ràng, độ rang vừa và nguồn gốc minh bạch.',
-                'Nếu bạn thích vị cân bằng, hãy chọn blend có tỷ lệ Arabica cao; nếu cần vị đậm, Robusta sẽ phù hợp hơn.',
-                'Bảo quản hạt trong hũ kín, tránh ánh sáng và ẩm để giữ hương thơm lâu nhất.'
+                'Robusta là loại phổ biến ở VN, đặc biệt miền Nam. Đắng rõ, caffeine gấp đôi Arabica, thường pha phin hoặc làm cà phê sữa. Giá khoảng 80-150k/kg.',
+                'Arabica thì mềm hơn, có vị chua trái cây nhẹ, hương thơm phức tạp (hoa, chocolate, caramel tùy vùng trồng). Thường dùng cho espresso hoặc pour over. Giá 200-500k/kg.',
+                'Thật ra không có loại nào "ngon hơn". Robusta đậm, tỉnh táo nhanh, hợp với sữa đặc. Arabica tinh tế, hợp uống đen hoặc latte. Thử cả hai rồi chọn theo sở thích là chuẩn nhất.'
             ]
         },
         {
-            'slug': 'can-bang-vi-dang-chua-ngot-trong-pha-che',
-            'title': 'Cân bằng vị đắng - chua - ngọt trong pha chế',
-            'excerpt': 'Hương vị hài hòa đến từ tỷ lệ chiết xuất đúng. Hãy thử 3 bước đơn giản sau để cải thiện...',
+            'slug': 'ba-cach-pha-ca-phe-tai-nha-khong-can-may',
+            'title': 'Ba cách pha cà phê tại nhà không cần máy',
+            'excerpt': 'Phin, French Press, và Cold Brew - ba cách pha đơn giản mà vẫn cho ly cà phê ngon. Không cần máy espresso vài chục triệu...',
             'category': 'Pha chế',
-            'read_time': '7 phút đọc',
-            'date': 'Thứ 4, 12/02/2026',
+            'read_time': '5 phút đọc',
+            'date': '14/03/2026',
             'icon': 'bi-cup-hot',
             'content': [
-                'Vị chua thường đến từ chiết xuất thiếu, vị đắng đến từ chiết xuất quá mức.',
-                'Điều chỉnh độ xay và thời gian chiết xuất để đạt cân bằng mong muốn.',
-                'Luôn nếm thử và ghi chú để cải thiện dần theo khẩu vị của bạn.'
+                'Phin: Cách truyền thống VN. Cho 2-3 thìa bột vào phin (xay vừa), đổ nước sôi từ từ, đợi 4-5 phút. Đơn giản, dễ điều chỉnh đậm/nhạt bằng lượng nước.',
+                'French Press: Cho bột (xay thô) + nước nóng 90°C vào bình, khuấy nhẹ, đậy nắp đợi 4 phút rồi ấn piston xuống. Vị đậm hơn phin, có chút bã mịn lắng đáy.',
+                'Cold Brew: Bột xay thô + nước lạnh (tỷ lệ 1:8), ngâm trong tủ lạnh 12-16 giờ. Vị ngọt tự nhiên, ít đắng, caffeine cao. Để được 3-4 ngày.'
             ]
         },
         {
-            'slug': 'cold-brew-cach-u-lanh-giu-tron-huong-thom',
-            'title': 'Cold Brew: cách ủ lạnh giữ trọn hương thơm',
-            'excerpt': 'Cold Brew tạo vị dịu, ít chua và dễ uống. Cùng khám phá cách ủ chuẩn trong 12-18 giờ...',
-            'category': 'Hướng dẫn',
-            'read_time': '6 phút đọc',
-            'date': 'Thứ 6, 14/02/2026',
-            'icon': 'bi-snow',
-            'content': [
-                'Dùng bột cà phê xay thô, tỷ lệ 1:8 đến 1:10 với nước lạnh.',
-                'Ủ trong tủ lạnh từ 12-18 giờ, sau đó lọc kỹ bằng giấy lọc.',
-                'Cold Brew ngon nhất khi dùng trong 3 ngày và bảo quản lạnh.'
-            ]
-        },
-        {
-            'slug': 'thoi-quen-uong-ca-phe-tot-cho-suc-khoe',
-            'title': 'Thói quen uống cà phê tốt cho sức khỏe',
-            'excerpt': 'Uống đúng thời điểm và liều lượng giúp tỉnh táo mà không ảnh hưởng giấc ngủ...',
-            'category': 'Sức khỏe',
-            'read_time': '4 phút đọc',
-            'date': 'Chủ nhật, 16/02/2026',
-            'icon': 'bi-heart-pulse',
-            'content': [
-                'Uống cà phê sau khi thức dậy 1-2 giờ để tối ưu hóa hiệu quả tỉnh táo.',
-                'Giữ lượng tiêu thụ vừa phải (1-2 ly/ngày) để tránh mất ngủ.',
-                'Kết hợp uống nước để cân bằng cơ thể và tránh mất nước.'
-            ]
-        },
-        {
-            'slug': 'cau-chuyen-tu-hat-den-ly-tai-coffee-shop',
-            'title': 'Câu chuyện từ hạt đến ly tại Brewly',
-            'excerpt': 'Chúng tôi lựa chọn hạt từ vùng cao, rang theo mẻ nhỏ để giữ trọn hương vị...',
-            'category': 'Câu chuyện',
-            'read_time': '8 phút đọc',
-            'date': 'Thứ 3, 18/02/2026',
-            'icon': 'bi-journal-text',
-            'content': [
-                'Chúng tôi làm việc với các nông hộ để tuyển chọn hạt chất lượng cao.',
-                'Quy trình rang mẻ nhỏ giúp kiểm soát chất lượng và giữ hương tốt nhất.',
-                'Mỗi ly cà phê là kết quả của sự tận tâm trong từng bước.'
-            ]
-        },
-        {
-            'slug': '5-mon-uong-duoc-yeu-thich-nhat-thang-nay',
-            'title': '5 món uống được yêu thích nhất tháng này',
-            'excerpt': 'Danh sách những sản phẩm được khách hàng đánh giá cao về hương vị và độ cân bằng...',
-            'category': 'Sản phẩm',
-            'read_time': '3 phút đọc',
-            'date': 'Thứ 5, 20/02/2026',
+            'slug': 'review-nhanh-5-loai-ca-phe-hop-pho-bien-o-vn',
+            'title': 'Review nhanh 5 loại cà phê hộp phổ biến ở VN',
+            'excerpt': 'G7, Nescafé, Vinacafe, Highlands, Wake Up 339 - loại nào đáng mua? Mình đã thử hết rồi chia sẻ luôn...',
+            'category': 'Review',
+            'read_time': '5 phút đọc',
+            'date': '10/03/2026',
             'icon': 'bi-star',
             'content': [
-                'Top lựa chọn tháng này gồm: Cà phê sữa đá, Americano, Latte, Cappuccino và Cold Brew.',
-                'Mỗi món đều có điểm mạnh riêng về hương vị và mức độ dễ uống.',
-                'Bạn có thể thử theo sở thích: đậm, cân bằng hoặc thơm ngậy.'
+                'G7 (65k/16 gói): Vị ngọt rõ, sữa nhiều, cà phê ít. Pha nhanh, ai cũng uống được. Best seller có lý do. Nhược: ngọt hơi nhiều nếu uống thường xuyên.',
+                'Nescafé (72k/20 gói): Nhẹ nhàng hơn G7, bớt ngọt. Vị cà phê không đậm lắm. Giá trung bình, hộp lớn. Hợp người ít uống cà phê.',
+                'Vinacafe (58k/20 gói): Hương rang kỹ, đắng rõ. Kiểu "cà phê xưa" mà bố mẹ thế hệ trước hay uống. Giá rẻ nhất nhưng không phải ai cũng quen.',
+                'Highlands (89k/12 gói): Sữa đá hòa tan, ngọt sánh. Uống lạnh ngon, nhưng giá cao nhất. Packaging đẹp, thích hợp làm quà.',
+                'Wake Up 339 (55k/20 gói): Đắng, ít ngọt. Giá sinh viên. Không fancy nhưng tỉnh táo tốt. Mình hay uống sáng khi cần code deadline.'
+            ]
+        },
+        {
+            'slug': 'tai-sao-ca-phe-viet-nam-ngon-ma-gia-re',
+            'title': 'Tại sao cà phê Việt Nam ngon mà giá rẻ?',
+            'excerpt': 'VN là nước xuất khẩu cà phê thứ 2 thế giới (sau Brazil), chủ yếu Robusta. Nhưng sao giá lại rẻ hơn Arabica nhập khẩu?',
+            'category': 'Kiến thức',
+            'read_time': '4 phút đọc',
+            'date': '05/03/2026',
+            'icon': 'bi-globe',
+            'content': [
+                'VN trồng chủ yếu Robusta (chiếm ~97%), đặc biệt ở Tây Nguyên (Đắk Lắk, Lâm Đồng, Gia Lai). Khí hậu nhiệt đới, đất bazan màu mỡ, phù hợp với Robusta - loại dễ trồng, năng suất cao.',
+                'Robusta có caffeine gấp đôi Arabica, đắng hơn, thơm kém hơn, nên giá thấp hơn (thường 50-70% giá Arabica). Nhưng với người Việt, Robusta rang đúng cách thì rất phù hợp - đậm, tỉnh táo, hợp pha phin và uống với sữa đặc.',
+                'Một số vùng ở Lâm Đồng, Sơn La cũng trồng Arabica nhưng quy mô nhỏ hơn. Arabica VN chất lượng ngon không thua Trung - Nam Mỹ, nhưng sản lượng ít nên giá cao (250-500k/kg).'
             ]
         }
     ]
